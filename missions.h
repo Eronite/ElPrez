@@ -17,37 +17,23 @@ typedef enum {
     // --- Mission 1 ---
     MTXT_M1_1 = 0,
     MTXT_M1_2,
-    MTXT_M1_3,
-    MTXT_M1_4,
     MGOAL_M1_1,
     MGOAL_M1_2,
-    MGOAL_M1_3,
-    MGOAL_M1_4,
     // --- Mission 2 ---
     MTXT_M2_1,
     MTXT_M2_2,
-    MTXT_M2_3,
-    MTXT_M2_4,
     MGOAL_M2_1,
     MGOAL_M2_2,
-    MGOAL_M2_3,
-    MGOAL_M2_4,
     // --- Mission 3 ---
     MTXT_M3_1,
     MTXT_M3_2,
-    MTXT_M3_3,
-    MTXT_M3_4,
     MGOAL_M3_1,
     MGOAL_M3_2,
-    MGOAL_M3_3,
-    MGOAL_M3_4,
     // --- Mission 4 ---
     MTXT_M4_1,
     MTXT_M4_2,
-    MTXT_M4_3,
     MGOAL_M4_1,
     MGOAL_M4_2,
-    MGOAL_M4_3,
 } MissionTextIdx;
 
 // Tableaux dans missions.c (bank 4)
@@ -78,6 +64,8 @@ typedef struct {
     uint16_t target_culture;
     uint8_t  target_type;
     uint8_t  target_count;
+    uint8_t  target_type2;
+    uint8_t  target_count2;
 } MissionStep;
 
 // Tableaux de missions dans missions.c (bank 5)

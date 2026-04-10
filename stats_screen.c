@@ -124,7 +124,7 @@ while (menu_running) {
                 MissionStep cur;
                 nb_story_get_current_step_b2(&cur);
                 draw_text(3, 2, GET_TEXT(TXT_STATS_CURRENT_GOAL), 1);
-                draw_text(1, 4, GET_MISSION_TEXT(cur.goal_idx), 1);
+                //draw_text(1, 4, GET_MISSION_TEXT(cur.goal_idx), 1);
                 uint8_t row = 7;
                 uint8_t chk_spr = 1u; // prochain slot sprite pour coche
                 if (cur.target_money > 0) {
@@ -235,6 +235,27 @@ while (menu_running) {
                     else if (cur.target_type == TILE_MINE_NW)  draw_text(3, row, "Mines:", 1);
                     else                                        draw_text(3, row, "Batiment:", 1);
                     draw_number(15, row, cur.target_count, 1);
+                    row += 2;
+                }
+                if (cur.target_type2 != 0) {
+                    uint8_t bldg_cnt = 0;
+                    uint8_t ri;
+                    for (ri = 0; ri < building_count; ri++)
+                        if (building_registry[ri].type == cur.target_type2) bldg_cnt++;
+                    if (bldg_cnt >= cur.target_count2) {
+                        set_sprite_tile(chk_spr, TILE_HUD_TICK);
+                    } else {
+                        set_sprite_tile(chk_spr, 0);
+                    }
+                    set_sprite_prop(chk_spr, 0x00u);
+                    move_sprite(chk_spr, 16u, (uint8_t)(row * 8u + 16u));
+                    chk_spr++;
+                    if      (cur.target_type2 == TILE_FARM_NW)  draw_text(3, row, "Fermes:", 1);
+                    else if (cur.target_type2 == TILE_HOUSE_NW) draw_text(3, row, "Maisons:", 1);
+                    else if (cur.target_type2 == TILE_MINE_NW)  draw_text(3, row, "Mines:", 1);
+                    else                                         draw_text(3, row, "Batiment:", 1);
+                    draw_number(15, row, cur.target_count2, 1);
+                    row += 2;
                 }
             } else {
                 draw_text(1, 6, GET_TEXT(TXT_FREEPLAY), 1);

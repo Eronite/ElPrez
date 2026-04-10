@@ -42,7 +42,8 @@ static uint8_t objectives_met(MissionStep *m) {
                       (m->target_happiness  > 0) |
                       (m->target_ore        > 0) |
                       (m->target_culture    > 0) |
-                      (m->target_type      != 0);
+                      (m->target_type      != 0) |
+                      (m->target_type2     != 0);
     if (!has_any) return 0;
 
     if (m->target_money      > 0 && game.money          < m->target_money)       return 0;
@@ -59,6 +60,14 @@ static uint8_t objectives_met(MissionStep *m) {
         for (i = 0; i < building_count; i++)
             if (building_registry[i].type == m->target_type) cnt++;
         if (cnt < m->target_count) return 0;
+    }
+
+    if (m->target_type2 != 0) {
+        uint8_t cnt = 0;
+        uint8_t i;
+        for (i = 0; i < building_count; i++)
+            if (building_registry[i].type == m->target_type2) cnt++;
+        if (cnt < m->target_count2) return 0;
     }
 
     return 1;
