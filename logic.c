@@ -1183,7 +1183,7 @@ void setup_story_params(uint8_t mission_id, uint8_t text_y) {
 
     // --- Configuration spécifique selon la mission ---
     if (mission_id == 0) {
-        game.money = 25000;
+        game.money = 5000;
         game.population = 10;
         game.foodStock = 20;
         game.year = 1950;
@@ -1234,7 +1234,7 @@ void setup_story_params(uint8_t mission_id, uint8_t text_y) {
     // Penultimo lance le briefing (si dialogue_seen est à 0)
     update_story_logic();
     // Réinitialiser l'argent après le dialogue initial (update_story_logic peut corrompre game.money)
-    if (mission_id == 0) game.money = 25000;
+    if (mission_id == 0) game.money = 5000;
     else if (mission_id == 1) game.money = 1000;
     // story_dialogue_animated laisse la fenêtre en position 0 ; on la vide
     // pour que le fade_out de main.c efface un écran blanc propre, pas le texte de Penultimo

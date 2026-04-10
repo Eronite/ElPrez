@@ -379,7 +379,7 @@ uint8_t load_saves_screen() {
                     nb_load_water_map_b2();
                     nb_init_game_variables_b2();
                     nb_boat_init_b2();
-                    game.money = 25000;
+                    game.money = 5000;
                     curs_x = 32; curs_y = 32;
                     cam_x = 176; cam_y = 184;
                     cam_target_x = cam_x; cam_target_y = cam_y;

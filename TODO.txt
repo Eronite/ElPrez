@@ -22,23 +22,14 @@ le son d'alerte et message de famine ne fonctionnent pas :  derniere question ge
 *********************************************************
 **********************************************
 *****************************************************************************
-apparemment on ne sauvegarde pas le flag du boat, quand je reprends une partie avec un port, on n'a pas le beateau qui fait ses allers retours
-**********************************************************************************
-***********************************************************************
-commencer par faire de la place en bank 0 ==> ok done
-===> en cours : et après dans la bank qui va accueillir les modif de ameliorations et les textes d'amelioration (bank 2 : trouver une fonction à à déplacer en bank 3 ou 4)
-et mettre ce fichier dans le dossier AAAclean164 ====> nope, recommencer avec aclean164, et commencer par faire de la place en bank 0 ; puis quand c'est ok et testé par moi, faire de la place dans la bank qui va accueillir les modif de ameliorations et les textes d'amelioration (bank 2 : trouver une fonction à à déplacer en bank 3 ou 4)
-***************************
-*********
+
 *
-*bateau apres chargement partie existante
 
 créer tiles + - et %, et les ajouter à la logique d'écriture
 
 faire pour les dialogues de penultimo la meme chose que les textes d'upgrades : on coupe les mots (et on ajoute un - en fin de ligne dans ce cas)
 *
 
-REIMPLEMENTER LE .md à la racine du proet : upgrade_descript_todo.md
 ***
 *
 *

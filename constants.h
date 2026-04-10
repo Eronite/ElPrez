@@ -85,7 +85,7 @@
 
 #define PENULTIMO_TILE_START 9
 #define REVENUE_INTERVAL 600
-#define MONTH_INTERVAL 1000
+#define MONTH_INTERVAL 1500
 
 #define GROWTH_THRESHOLD 4 // Il faut 4 "points" pour un nouvel habitant
 
