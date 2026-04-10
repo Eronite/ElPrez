@@ -33,7 +33,7 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      0000239E  s__HOME   |    00002DDE  l__CODE_4 |    00003000  _rROMB1  
      000031F1  l__CODE_3 |    00003708  s__BASE   |    00003708  s__CODE_0
      00003708  s__INITIA |    00003708  s__LIT    |    000037F6  l__CODE_5
-     000039A3  l__CODE_1 |    00003ADF  l__CODE_2 |    00003BF5  s__GSINIT
+     000039A7  l__CODE_1 |    00003ADF  l__CODE_2 |    00003BF5  s__GSINIT
      00003C01  s__GSFINA |    00004000  _rMBC7_SR |    00004000  _rRAMB   
      00008000  __VRAM    |    00008000  __VRAM800 |    00008800  __VRAM880
      00009000  __VRAM900 |    00009800  __SCRN0   |    00009C00  __SCRN1  
@@ -398,7 +398,7 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE_1                00014000    000039A3 =       14755. bytes (REL,CON)
+_CODE_1                00014000    000039A7 =       14759. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
@@ -410,15 +410,15 @@ _CODE_1                00014000    000039A3 =       14755. bytes (REL,CON)
      0001437C  _building |    000143BC  _get_tool |    00014426  _get_eras
      0001461A  _get_buil |    00014666  _get_max_ |    000146D2  _update_b
      00014904  _refresh_ |    00014BD4  _add_buil |    00014C44  _remove_b
-     00014D43  _rebuild_ |    0001502A  _get_sub_ |    00015039  _reset_su
-     0001503E  _update_s |    0001546D  _sub_tool |    00015485  _is_area_
-     00015502  _plot_bui |    000155AA  _update_g |    00015A1C  _update_s
-     00015A24  _draw_hud |    00015BF4  _update_h |    00015D63  _move_lim
-     00015DAC  _logo_scr |    00016028  _story_di |    00016333  _move_cur
-     00016794  _force_cu |    000167B1  _trigger_ |    00016874  _trigger_
-     0001692A  _setup_st |    00016A13  _update_r |    00016C7F  _cars_ini
-     00016CD5  _cars_upd |    000170B7  _tram_ini |    00017104  _tram_upd
-     0001769A  _boat_ini |    000176C1  _boat_upd
+     00014D43  _rebuild_ |    00015031  _get_sub_ |    00015040  _reset_su
+     00015045  _update_s |    00015474  _sub_tool |    0001548C  _is_area_
+     00015509  _plot_bui |    000155B1  _update_g |    00015A23  _update_s
+     00015A2B  _draw_hud |    00015BFB  _update_h |    00015D6A  _move_lim
+     00015DB3  _logo_scr |    0001602F  _story_di |    0001633A  _move_cur
+     0001679B  _force_cu |    000167B8  _trigger_ |    0001687B  _trigger_
+     00016931  _setup_st |    00016A1A  _update_r |    00016C86  _cars_ini
+     00016CDC  _cars_upd |    000170BE  _tram_ini |    0001710B  _tram_upd
+     000176A1  _boat_ini |    000176C5  _boat_upd
 ASxxxx Linker V03.00/V05.40 + sdld,  page 30.
 Hexadecimal  [32-Bits]
 

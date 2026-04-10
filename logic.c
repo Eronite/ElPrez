@@ -359,6 +359,7 @@ void rebuild_registry_from_map(void) {
             case TILE_MINE_NW:
             case TILE_BAR_NW:
             case TILE_MEDIADISCO_NW:
+            case TILE_PORT_NW:
                 if (building_count < MAX_BUILDINGS) {
                     BuildingInstance *b = &building_registry[building_count];
                     b->map_idx      = i;

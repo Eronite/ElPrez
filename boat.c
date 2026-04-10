@@ -35,7 +35,6 @@ void boat_init(void) {
     boat_going_fwd   = 1;
     boat_pause_timer = 0;
     boat_px_timer    = 0;
-    boat_has_port    = 0;
     nb_reload_boat_tiles_b1(1);
 }
 
