@@ -119,19 +119,19 @@ uint8_t get_tool_base_tile(uint8_t tool) {
 uint8_t get_erase_info(uint8_t et, EraseInfo *out) {
     if (et == TYPE_ROAD)             { out->size=1; out->base_t=TYPE_ROAD;            out->cost=2;    return 1; }
     if (et == TYPE_ROAD_VERTI)       { out->size=1; out->base_t=TYPE_ROAD_VERTI;      out->cost=2;    return 1; }
-    if (et >= TILE_FARM_NW && et <= TILE_FARM_NW+8)             { out->size=3; out->base_t=TILE_FARM_NW;            out->cost=200;  return 1; }
+    if (et >= TILE_FARM_NW && et <= TILE_FARM_NW+8)             { out->size=3; out->base_t=TILE_FARM_NW;            out->cost=150;  return 1; }
     if (et >= TYPE_FACTORY_NW && et <= TYPE_FACTORY_NW+15)      { out->size=4; out->base_t=TYPE_FACTORY_NW;         out->cost=700;  return 1; }
     if (et >= TYPE_MALL_NW && et <= TYPE_MALL_NW+15)            { out->size=4; out->base_t=TYPE_MALL_NW;            out->cost=1500; return 1; }
-    if (et >= TILE_HOUSE_NW && et <= TILE_HOUSE_NW+8)           { out->size=3; out->base_t=TILE_HOUSE_NW;           out->cost=200;  return 1; }
-    if (et >= TILE_POLICE_NW && et <= TILE_POLICE_NW+3)         { out->size=2; out->base_t=TILE_POLICE_NW;          out->cost=1000; return 1; }
-    if (et >= TILE_PLANTATION_NW && et <= TILE_PLANTATION_NW+3) { out->size=2; out->base_t=TILE_PLANTATION_NW;      out->cost=150;  return 1; }
+    if (et >= TILE_HOUSE_NW && et <= TILE_HOUSE_NW+8)           { out->size=3; out->base_t=TILE_HOUSE_NW;           out->cost=150;  return 1; }
+    if (et >= TILE_POLICE_NW && et <= TILE_POLICE_NW+3)         { out->size=2; out->base_t=TILE_POLICE_NW;          out->cost=800;  return 1; }
+    if (et >= TILE_PLANTATION_NW && et <= TILE_PLANTATION_NW+3) { out->size=2; out->base_t=TILE_PLANTATION_NW;      out->cost=120;  return 1; }
     if (et >= TILE_WOOD_NW && et <= TILE_WOOD_NW+15)            { out->size=4; out->base_t=TILE_WOOD_NW;            out->cost=700;  return 1; }
     if (et >= TILE_CHURCH_NW && et <= TILE_CHURCH_NW+8)         { out->size=3; out->base_t=TILE_CHURCH_NW;          out->cost=600;  return 1; }
-    if (et >= TILE_HOSPITAL_NW && et <= TILE_HOSPITAL_NW+15)    { out->size=4; out->base_t=TILE_HOSPITAL_NW;        out->cost=2500; return 1; }
-    if (et >= TILE_SCHOOL_NW && et <= TILE_SCHOOL_NW+3)         { out->size=2; out->base_t=TILE_SCHOOL_NW;          out->cost=1200; return 1; }
-    if (et >= TILE_POWER_NW && et <= TILE_POWER_NW+15)          { out->size=4; out->base_t=TILE_POWER_NW;           out->cost=6000; return 1; }
-    if (et >= TILE_MINE_NW && et <= TILE_MINE_NW+15)            { out->size=4; out->base_t=TILE_MINE_NW;            out->cost=2500; return 1; }
-    if (et >= TILE_BAR_NW && et <= TILE_BAR_NW+3)               { out->size=2; out->base_t=TILE_BAR_NW;             out->cost=500;  return 1; }
+    if (et >= TILE_HOSPITAL_NW && et <= TILE_HOSPITAL_NW+15)    { out->size=4; out->base_t=TILE_HOSPITAL_NW;        out->cost=2000; return 1; }
+    if (et >= TILE_SCHOOL_NW && et <= TILE_SCHOOL_NW+3)         { out->size=2; out->base_t=TILE_SCHOOL_NW;          out->cost=900;  return 1; }
+    if (et >= TILE_POWER_NW && et <= TILE_POWER_NW+15)          { out->size=4; out->base_t=TILE_POWER_NW;           out->cost=5000; return 1; }
+    if (et >= TILE_MINE_NW && et <= TILE_MINE_NW+15)            { out->size=4; out->base_t=TILE_MINE_NW;            out->cost=2000; return 1; }
+    if (et >= TILE_BAR_NW && et <= TILE_BAR_NW+3)               { out->size=2; out->base_t=TILE_BAR_NW;             out->cost=350;  return 1; }
     if (et >= TILE_MEDIADISCO_NW && et <= TILE_MEDIADISCO_NW+8) { out->size=3; out->base_t=TILE_MEDIADISCO_NW;      out->cost=1000; return 1; }
     if (et >= TILE_BARAQUE_NW && et <= TILE_BARAQUE_NW+3)       { out->size=2; out->base_t=TILE_BARAQUE_NW;         out->cost=0;    return 1; }
     if (et >= TILE_PORT_SAWMILL_NW && et <= TILE_PORT_SAWMILL_NW+3) { out->size=2; out->base_t=TILE_PORT_SAWMILL_NW; out->cost=700; return 1; }
@@ -154,18 +154,18 @@ uint8_t get_building_size(uint8_t type) {
 
 uint8_t get_max_capacity(uint8_t type) {
     switch(type) {
-        case TILE_HOUSE_NW:      return 4;
-        case TILE_PLANTATION_NW: return 2;
+        case TILE_HOUSE_NW:      return 6;
+        case TILE_PLANTATION_NW: return 5;
         case TILE_FARM_NW:       return 4;
         case TYPE_FACTORY_NW:    return 3;
         case TYPE_MALL_NW:       return 4;
         case TILE_WOOD_NW:       return 2;
-        case TILE_POLICE_NW:     return 2;
+        case TILE_POLICE_NW:     return 5;
         case TILE_CHURCH_NW:     return 2;
-        case TILE_HOSPITAL_NW:   return 3;
-        case TILE_SCHOOL_NW:     return 2;
-        case TILE_POWER_NW:      return 3;
-        case TILE_MINE_NW:       return 2;
+        case TILE_HOSPITAL_NW:   return 6;
+        case TILE_SCHOOL_NW:     return 5;
+        case TILE_POWER_NW:      return 6;
+        case TILE_MINE_NW:       return 5;
         case TILE_BAR_NW:        return 1;
         case TILE_MEDIADISCO_NW: return 1;
         case TILE_ONETILEHOME:   return 4;
@@ -311,7 +311,7 @@ void add_building(uint16_t map_idx, uint8_t type) {
     b->flags        = 0;
     b->occupants    = 0;
     b->max_capacity = get_max_capacity(type);
-    building_salary[building_count] = 4;
+    building_salary[building_count] = 2;
     building_count++;
     update_building_flags(building_count - 1);
     if (type == TILE_PORT_NW) boat_has_port = 1;
@@ -654,7 +654,7 @@ void update_game_logic() { // ici les count_buildings sont ok
                 game.foodStock += surplus;
                 if (game.foodStock > 9999) game.foodStock = 9999;
             } else {
-                game.rev_food = (uint16_t)((uint32_t)surplus * 2);
+                game.rev_food = (uint16_t)((uint32_t)surplus * 3);
                 game.money += game.rev_food;
             }
         } else {

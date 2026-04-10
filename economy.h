@@ -7,7 +7,7 @@
 #define SCHOOL_RADIUS    12
 #define HOSPITAL_RADIUS  12
 #define CHURCH_RADIUS    8
-#define BAR_RADIUS       6
+#define BAR_RADIUS       10
 #define POLLUTION_RADIUS 7
 #define WORK_RADIUS      15
 

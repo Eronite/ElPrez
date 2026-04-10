@@ -8,9 +8,9 @@
 
 // Constantes de réglage
 #define SALARY_PER_WORKER    4
-#define RENT_PER_RESIDENT    3
-#define PRICE_ORE            6
-#define PRICE_CULTURE        3
+#define RENT_PER_RESIDENT    8
+#define PRICE_ORE            10
+#define PRICE_CULTURE        5
 
 // Copies locales des fonctions statiques de economy.c
 // (nécessaire car elles sont static là-bas et non accessibles depuis bank 4)
@@ -91,17 +91,17 @@ static uint8_t bldg_maintenance(uint8_t type) {
         case TILE_HOUSE_NW:      return 1;
         case TYPE_MALL_NW:       return 3;
         case TYPE_FACTORY_NW:    return 4;
-        case TILE_FARM_NW:       return 1;
-        case TILE_PLANTATION_NW: return 2;
+        case TILE_FARM_NW:       return 2;
+        case TILE_PLANTATION_NW: return 3;
         case TILE_WOOD_NW:       return 8;
-        case TILE_POLICE_NW:     return 6;
-        case TILE_CHURCH_NW:     return 10;
-        case TILE_HOSPITAL_NW:   return 12;
+        case TILE_POLICE_NW:     return 8;
+        case TILE_CHURCH_NW:     return 6;
+        case TILE_HOSPITAL_NW:   return 15;
         case TILE_SCHOOL_NW:     return 12;
-        case TILE_POWER_NW:      return 20;
-        case TILE_MINE_NW:       return 22;
+        case TILE_POWER_NW:      return 25;
+        case TILE_MINE_NW:       return 18;
         case TILE_MEDIADISCO_NW: return 16;
-        case TILE_BAR_NW:        return 12;
+        case TILE_BAR_NW:        return 8;
         case TILE_PORT_NW:       return 10;
         case TILE_ONETILEHOME:   return 1;
         default:                 return 14;
@@ -270,39 +270,49 @@ void update_economy(void) {
                     }
                     if (!has_police && s_t == TILE_POLICE_NW && dist < POLICE_RADIUS && s->occupants > 0) {
                         has_police = 1;
-                        uint8_t pjobs = bldg_jobs(TILE_POLICE_NW);
-                        crime_d -= (pjobs > 0) ? (int16_t)(2 * s->occupants / pjobs) : 0;
+                        crime_d -= 2;
                     }
                     if (!has_bar  && s_t == TILE_BAR_NW && dist < BAR_RADIUS && s->occupants > 0) has_bar  = 1;
                     if (!has_work && (s_t == TILE_FARM_NW || s_t == TILE_PLANTATION_NW || s_t == TYPE_FACTORY_NW || s_t == TILE_MINE_NW || s_t == TILE_WOOD_NW || s_t == TYPE_MALL_NW) && dist < WORK_RADIUS && s->occupants > 0) has_work = 1;
                 }
-                // Poids de désirabilité : 1 minimum + 1 par aménité staffée (max 4)
-                uint8_t amenity_count = has_health + has_police + has_bar + has_work;
+                // Pénalité pollution : mine ou centrale dans POLLUTION_RADIUS
+                uint8_t has_pollution = 0;
+                for (si = 0; si < building_count; si++) {
+                    BuildingInstance *s = &building_registry[si];
+                    uint8_t s_t = s->type;
+                    if (s_t == TILE_MINE_NW || s_t == TILE_POWER_NW) {
+                        uint16_t dist = abs(h_x - (s->map_idx % 64)) + abs(h_y - (s->map_idx / 64));
+                        if (dist < POLLUTION_RADIUS) { has_pollution = 1; break; }
+                    }
+                }
+                // Poids de désirabilité : 1 minimum + 1 par aménité staffée (max 5)
+                uint8_t amenity_count = has_health + has_police + has_bar + has_work + has_school;
                 b->occupants = amenity_count + 1;
                 if (b->occupants > b->max_capacity) b->occupants = b->max_capacity;
                 housing_cap += b->max_capacity;
                 // Impacts globaux bonheur
-                if (has_school) hap_d += 2;
-                if (has_bar)    hap_d += 2;
+                if (has_school)    hap_d += 2;
+                if (has_bar)       hap_d += 2;
+                if (has_pollution) hap_d -= 3;
                 if (f & BLDG_UPG1_APPLIED) hap_d += 5;
                 break;
             }
 
             case TILE_FARM_NW: {
-                uint16_t base = (f & BLDG_UPG1_APPLIED) ? 30 : 22;
+                uint16_t base = (f & BLDG_UPG1_APPLIED) ? 55 : 40;
                 uint8_t fj = bldg_jobs(TILE_FARM_NW);
                 food_p += (fj > 0) ? (uint16_t)((uint32_t)base * b->occupants / fj) : 0;
                 break;
             }
             case TILE_PLANTATION_NW: {
-                uint16_t base = (f & BLDG_UPG1_APPLIED) ? 30 : 20;
+                uint16_t base = (f & BLDG_UPG1_APPLIED) ? 45 : 30;
                 uint8_t pj = bldg_jobs(TILE_PLANTATION_NW);
                 culture_p += (pj > 0) ? (uint16_t)((uint32_t)base * b->occupants / pj) : 0;
                 break;
             }
             case TILE_MINE_NW: {
                 if (f & BLDG_FLAG_HAS_ORE) {
-                    uint16_t base = (f & BLDG_UPG1_APPLIED) ? 30 : 20;
+                    uint16_t base = (f & BLDG_UPG1_APPLIED) ? 42 : 28;
                     uint8_t mj = bldg_jobs(TILE_MINE_NW);
                     ore_p += (mj > 0) ? (uint16_t)((uint32_t)base * b->occupants / mj) : 0;
                 }
@@ -310,14 +320,14 @@ void update_economy(void) {
             }
             case TILE_CHURCH_NW: {
                 uint8_t cj = bldg_jobs(TILE_CHURCH_NW);
-                if (cj > 0) hap_d += (int16_t)(10 * b->occupants / cj);
+                if (cj > 0) hap_d += (int16_t)(15 * b->occupants / cj);
                 break;
             }
             case TILE_BAR_NW: {
                 uint8_t bj = bldg_jobs(TILE_BAR_NW);
                 if (bj > 0) hap_d += (int16_t)(5 * b->occupants / bj);
                 if (f & BLDG_UPG2_APPLIED) {
-                    uint16_t bar_rev = (uint16_t)(50 * b->occupants / bj);
+                    uint16_t bar_rev = (uint16_t)(40 * b->occupants / bj);
                     game.monthly_revenue += bar_rev;
                     game.rev_bar         += bar_rev;
                 }
@@ -326,9 +336,9 @@ void update_economy(void) {
             case TYPE_MALL_NW: {
                 uint8_t mj = bldg_jobs(TYPE_MALL_NW);
                 if (mj > 0) {
-                    uint16_t mall_rev = (uint16_t)(40 * b->occupants / mj);
-                    if (f & BLDG_UPG1_APPLIED) mall_rev += (uint16_t)(20 * b->occupants / mj);
-                    if (f & BLDG_UPG2_APPLIED) mall_rev += (uint16_t)(20 * b->occupants / mj);
+                    uint16_t mall_rev = (uint16_t)(60 * b->occupants / mj);
+                    if (f & BLDG_UPG1_APPLIED) mall_rev += (uint16_t)(30 * b->occupants / mj);
+                    if (f & BLDG_UPG2_APPLIED) mall_rev += (uint16_t)(30 * b->occupants / mj);
                     game.monthly_revenue += mall_rev;
                     game.rev_mall        += mall_rev;
                 }
@@ -372,7 +382,8 @@ void update_economy(void) {
         for (ri = 0; ri < building_count; ri++) {
             BuildingInstance *b = &building_registry[ri];
             if (b->type == TILE_HOUSE_NW && (b->flags & BLDG_FLAG_HAS_ROAD)) {
-                uint16_t rent = (uint16_t)(b->occupants * RENT_PER_RESIDENT);
+                uint8_t rent_rate = RENT_PER_RESIDENT + ((b->flags & BLDG_UPG1_APPLIED) ? 2 : 0);
+                uint16_t rent = (uint16_t)(b->occupants * rent_rate);
                 game.monthly_revenue += rent;
                 game.rev_rents += rent;
             }
@@ -413,9 +424,15 @@ void update_economy(void) {
     if (num_houses > 0) game.education_level = (total_edu / num_houses);
     int16_t s_score = 50 + (health_d / (num_houses + 1));
     game.health = (s_score > 100) ? 100 : (s_score < 0 ? 0 : (uint8_t)s_score);
-    game.crime_rate = (game.unemployment_rate / 2) + crime_d;
+    {
+        int16_t cr = (int16_t)(game.unemployment_rate / 2) + crime_d;
+        game.crime_rate = (cr > 0) ? (uint8_t)cr : 0;
+    }
+    // Bonus bonheur éducation
+    if      (game.education_level >= 8) hap_d += 3;
+    else if (game.education_level >= 5) hap_d += 1;
     game.hap_buildings = hap_d + homeless_pen;
-    int16_t h_score = 50 + hap_d - ((game.crime_rate >= 15) ? (game.crime_rate / 5) : 0) - (game.unemployment_rate / 5);
+    int16_t h_score = 50 + hap_d - ((game.crime_rate >= 8) ? (game.crime_rate / 4) : 0) - (game.unemployment_rate / 5);
     if (!power_ok) h_score -= 10;
     if (h_score > 100) h_score = 100;
     if (h_score < 0)   h_score = 0;
@@ -471,7 +488,7 @@ void update_economy(void) {
     if (num_houses > 0) {
         int16_t hap_offset = (int16_t)game.avg_happiness - 50;
         int16_t pop_delta = (int16_t)(((int32_t)hap_offset * (int16_t)(game.population + 5)) / 500);
-        if (pop_delta == 0 && hap_offset >= 0 && game.population < 80) pop_delta = 1;
+        if (pop_delta == 0 && hap_offset >= 0 && game.population < 150) pop_delta = 1;
         if (pop_delta == 0 && hap_offset < 0) pop_delta = -1;
         if (hap_offset == 0 && game.population >= 80) pop_delta = 0;
         int16_t max_delta = (int16_t)(game.population / 20 + 1);
