@@ -597,6 +597,7 @@ void load_story_game(uint8_t bank_index) {
         }*/
 
         for(uint16_t i=0; i<4096; i++) ram_map[i] = SRAM_MAP_PTR[i];
+        nb_boat_init_b2();
         nb_rebuild_registry_b2();
         // Restaurer les flags par map_idx (format : count, [idx_hi, idx_lo, flags, salary, occupants]...)
         {

@@ -33,7 +33,7 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      0000239E  s__HOME   |    00002DDE  l__CODE_4 |    00003000  _rROMB1  
      000031F1  l__CODE_3 |    00003708  s__BASE   |    00003708  s__CODE_0
      00003708  s__INITIA |    00003708  s__LIT    |    000037F6  l__CODE_5
-     000039A3  l__CODE_1 |    00003ADC  l__CODE_2 |    00003BF5  s__GSINIT
+     000039A3  l__CODE_1 |    00003ADF  l__CODE_2 |    00003BF5  s__GSINIT
      00003C01  s__GSFINA |    00004000  _rMBC7_SR |    00004000  _rRAMB   
      00008000  __VRAM    |    00008000  __VRAM800 |    00008800  __VRAM880
      00009000  __VRAM900 |    00009800  __SCRN0   |    00009C00  __SCRN1  
@@ -468,16 +468,16 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE_2                00024000    00003ADC =       15068. bytes (REL,CON)
+_CODE_2                00024000    00003ADF =       15071. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
      00024000  _confirm_ |    00024209  _wipe_slo |    0002422E  _load_sav
-     00024764  _save_sto |    00024EB1  _load_sto |    00025051  _main_men
-     000251B6  _pause_me |    0002560B  _confirm_ |    000257A5  _story_su
-     00025A60  _language |    00025B48  _init_lan |    00025B4F  _get_text
-     00027156  _intro_bu |    00027556  _generate |    00027625  _display_
-     00027722  _intro_ti |    000278B9  _show_min
+     00024764  _save_sto |    00024EB1  _load_sto |    00025054  _main_men
+     000251B9  _pause_me |    0002560E  _confirm_ |    000257A8  _story_su
+     00025A63  _language |    00025B4B  _init_lan |    00025B52  _get_text
+     00027159  _intro_bu |    00027559  _generate |    00027628  _display_
+     00027725  _intro_ti |    000278BC  _show_min
 ASxxxx Linker V03.00/V05.40 + sdld,  page 33.
 Hexadecimal  [32-Bits]
 

@@ -31,7 +31,11 @@ et mettre ce fichier dans le dossier AAAclean164 ====> nope, recommencer avec ac
 ***************************
 *********
 *
-*
+*bateau apres chargement partie existante
+
+créer tiles + - et %, et les ajouter à la logique d'écriture
+
+faire pour les dialogues de penultimo la meme chose que les textes d'upgrades : on coupe les mots (et on ajoute un - en fin de ligne dans ce cas)
 *
 
 REIMPLEMENTER LE .md à la racine du proet : upgrade_descript_todo.md
