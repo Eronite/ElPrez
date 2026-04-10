@@ -36,8 +36,10 @@ faire pour les dialogues de penultimo la meme chose que les textes d'upgrades : 
 QUAND ON REVEINT D'UN DIALOGUE DE PENULTIMO , sur la carte, le hud doit être effacé (car sinon bug hud affiché à moitié)
 
 
+implémnter economie : AAAaclean169\progression_economie_todo.md
 
 
+mettre cadre sur la description d'amelioration
 
 
 *
