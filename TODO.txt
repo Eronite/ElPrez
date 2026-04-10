@@ -1,0 +1,337 @@
+sous menus
+
+intervertir tiles une fois sur 2 (à la pose) pour le centre des bâtiments appart
+
+pour la route, à la pose : si autre route à droite ou à gauche : horizontale ; si autre route en bas ou au dessus : verticale ; si les 2 : tile croisement ; si rien : horizontale =======> à recalculer tous les xxx (au meme moment que l'argent ?)
+
+modifier le calcul de l'argent pour que ça colle aux mois
+
+SAUBEGARDER LA DATE
+et food etc
+
+quand on est sur le menu dessub category, afficher le prix du batiment actuel (créer 10 sprites de 0 à 9, sans transparence, et afficher le prix au dessus du batiment actuel)
+
+
+corriger (à la main) l'emplacement des sub categories par rapport à leur catégorie (ça sort de l'écran pour la premiere et la derniere)
+
+ajouter / et : (voir stats_screen)
+
+
+le son d'alerte et message de famine ne fonctionnent pas :  derniere question gemini ne regle rien ==> utiliser sprite ? ou un hud en entier, bloquant jusque bouton start ?
+
+*********************************************************
+**********************************************
+*****************************************************************************
+apparemment on ne sauvegarde pas le flag du boat, quand je reprends une partie avec un port, on n'a pas le beateau qui fait ses allers retours
+**********************************************************************************
+***********************************************************************
+commencer par faire de la place en bank 0 ==> ok done
+===> en cours : et après dans la bank qui va accueillir les modif de ameliorations et les textes d'amelioration (bank 2 : trouver une fonction à à déplacer en bank 3 ou 4)
+et mettre ce fichier dans le dossier AAAclean164 ====> nope, recommencer avec aclean164, et commencer par faire de la place en bank 0 ; puis quand c'est ok et testé par moi, faire de la place dans la bank qui va accueillir les modif de ameliorations et les textes d'amelioration (bank 2 : trouver une fonction à à déplacer en bank 3 ou 4)
+***************************
+*********
+*
+*
+*
+
+REIMPLEMENTER LE .md à la racine du proet : upgrade_descript_todo.md
+***
+*
+*
+QUAND ON REVEINT D'UN DIALOGUE DE PENULTIMO , sur la carte, le hud doit être effacé (car sinon bug hud affiché à moitié)
+
+
+
+
+
+
+*
+*
+*
+
+
+ajouter les deux points à la fonction de draw text
+
+refaire e starvation chaque mois / tous les 2 mois tant que pas réglé ?
+
+animated text and sound effect , de gemini : implémenter le mode story puis la suite (side quests)
+
+
+Prochaine étape ?
+Pour que ce soit parfait, il faudrait que le Menu de Pause sache s'il doit afficher "Sauvegarder" ou si c'est désactivé en mode Story.
+
+Est-ce que tu veux qu'on ajoute un écran de transition entre les missions (avec un petit texte récapitulatif du score) ?
+
+
+
+save : 
+Variable current_save_slot : C'est la clé.
+
+Si tu as lancé le mode Story, ta fonction setup_story_params a déjà mis cette variable sur 2 ou 3.
+
+Si tu as chargé une partie Free Play, elle est sur 0 ou 1.
+
+La fonction perform_save() n'a donc pas besoin de se poser de questions, elle écrit dans la banque déjà ouverte.
+
+L'adresse 0xA000 + 4108 : Elle est cruciale. En mode Story, si tu ne sauvegardes pas current_step, le joueur recommencera toujours au premier dialogue de Penultimo, même s'il avait déjà construit la moitié de la ville.
+
+
+
+ACTUEL :
+les 3 slots du mode free play se save automatiquement (mais il ne devrait y avoir que 2 slots ?)
+en mode story, menu à terminer, et verif si ça se save
+
+corriger select_story_save_slot (curseur qui bouge pas)
+
+ecran story mode :
+enlever le "choix" back, et utiliser le bouton B pour faire retour (voir autre menu)
+
+
+volatile supprimé dans les define de food, pop etc : ça change quoi ?
+
+quand on continue en mode story, le texte de penultimo se reaffiche (on a une struct qui devrait empecher mais ne fonctionne pas) (StoryStatus)
+
+
+en mode story ça save auto mais on a quand meme la fonction save dans le menu de pause : à supprimer en mode story ? ou enlever la save auto ?
+
+ajouter un point . dans les caractères (housing ap.) et des tirets ? pour les titres genre --- almanach ---
+
+
+game.housing_capacity est calculé en fonction de TILE_FARM_NW : le caLculer ne fonction des habitations !!!!!!!!!!!!!!!!!!!!
+
+VERIFER LE CALCULS DE TOUTES LES VARIABLES DE LECRAN STATS ALMANACH
+
+dernier prompt gemini : monthly exp et monthly profit ne correspondent pas
+appliquer le corrections !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+penultimo mini est en 2x2, je peux doubler les pixels et le passer en 4x4 (voire 6x6 ???) (et finit sur la droite, pas coupé ? juste les cheveux) et faire de meme pour les autres persos (trump etc, cf favoris chrome) ET FAIRE EN SORTE QU ON VOIT LES GALLONS DE PENULTIMO? 9A CHANGE TOUT (LE DEBUT DE SSA VESTE ? EN HAUT)
+
+dans le menu in game, remplacer reset par retour à main menu (menu de choix entre story et free play)
+sur le menu in game, implémenter un retour ave le bouton B
+
+dans le meu in game, implementer un resumé de l'objectif en cours (sur le mission : current goal)
+
+logic d'augemntation de la population
+
+TRANSITIONS : en mode free play , le chargement est clean, en mode story, le fade out in n'est pas ok, on voit la couche bakcground avant l'afficahge final (que ce soit avec new game ou continue)
+
+
+sur le mode free play, remonter d'un Y les slots sur le menu (et donc les del, et donc le curseur)
+
+7 et 8 bouche penultimo
+
+
+ajouter le dollar pour les missions et menu stat
+
+le continue de story bug : trp de fade in out , et parfois ça reste noir, il faut voir ce qu'il se passe sur ce continue
+l'écran reste noir quand on fait continue : c'est quand on est sorti avec le menu_pause : menu principal (probleme d'état ?)
+quand on reset la console, le continue est ok (trop de fade in out mais sinon ok)
+===============> il doit manquer un SHOW.... ou un fade in, quand on revient de l'option menu principal du meu de pause de la map ?
+
+NON : sur la map, en fait on affiche la map mais le curseur est le curseur road car c'est le curseur d'un menu, on ne peut le déplacer que de 4 en y, et pas en x, sur quel menu on est ?
+
+
+
+ça sauvegare auto dans le mode story ET dans le mode free play ===> pour le mode freeplay, essayer que non
+
+
+et faire en sorte que la sauvegarde save la map mais aussi les données food etc
+
+
+ajouter l'anim de penultimo dans le logo screen pendant les paroles NOPE
+
+mettre le logo screen au chargement d'une nouvelle partie story
+et en splash screen, mettre : un background avec une ville, et un scrolling sur e background + un gros titre (nouvelles tuiles) au dessus du background
+
+
+dans story mode : le new game, continue (et b : back) se décalent vers la gauche quand on revient de la map ? (le curseur se décale aussi)
+idem pour le menu pause, dès qu'on arrive sur la map de story : le décalage doit se produire à l'appel de ce menu pause ?
+le menu pause se décale aussi en mode free play, quand on save, puis qu'on recharge une partie
+
+9A DOIT VENIR DE LA LANGUE, PEUT ETRE MAL STOCKee, ON AFFICHE L4ANGLAIS à la position du fr ?
+
+
+le slot a du mode free play a un probleme de sauvegarde : quand on save et qu'on revient au menu, on peut recharger le slot a et la map s'affiche bien ; mais quand on reset la game boy, la map a disparu, la sauvegarde n'a pas survécu au reset de la console
+
+
+refaire la logique de l'économie avec ls citizen ? où bien merger ?
+
+dans l'agent du hd, quand on passe en dessous de 1000, le premier 0 reste
+
+bug affichage hud, décalé vers le bas (une seule ligne affichée au lieu de 2, pour les tuiles de catégories) : en mode story, après le 2e dialogue de penultimo, on revient sur la map, et le hub ne s'affiche pas bien
+
+cleaner les includes (avec gemii) sdtlib alors que rand custom
+
+demander confirmation quand on commence une nouvelle story (vu que ça delete la save courante)
+
+si habitants > housing capacity : on fait apparaitre des bidonvilles et on abaisse la rapdidité de croissance des habitants
+
+
+le spawn de shack les fait s'afficher 2 par cadran, mais surtout toujours en quinconce de la meme maniere
+
+
+
+remplacer les modulo 32 par & 31 : voir avec gemini, c'est beaucoup plus opti pour la game boy
+
+
+
+
+
+baraques qui disparaissent : quand on a des sans abris et que 'lon a supprimé des houses ? au moment où on bouge le curseur, la baraque qui vient d'etre posée disparait : problème de persistance, mais pourquoi les 7 premieres baraques restent affichées ? après avoir supprimé toutes les baraques, les nouvelles ne persistent pas non plus quand on bouge le curseur
+
+aussi : la housing capacity n'est pas ajustée en conséquence quand on supprime des maisons : pourquoi ? pourtant on recompte le nombre de tile_house_nw à chaque mois ?
+
+pour la fonction de spawn shacks : faire en sorte qu'à chaque nouvelle shack, on la place autour de la house suivante (ou toutes les 3 shacks on passe à la house suivante)
+
+
+le nb de logements dans le hud (housing capacity) comprend les baraques, ce devrait etre séparé : en fait on garde la housing capacity avec les baraques pour la logique du jeu mais pour le hud on enleve les baraques du total
+
+
+à envoyer pour la prod de cartouches (Alibaba ou truc pas cher, voir conv gemini)) : 
+Technical Specifications for Game Boy Cartridge Production
+Subject: Inquiry for custom Game Boy MBC5 Flash Cartridges - [Quantity: 200 units]
+
+Dear Sales Team,
+
+I am looking for a quote for the production of custom Game Boy cartridges for my homebrew game. Please find the technical requirements below:
+
+Mapper Type: MBC5 (Essential for proper bank switching).
+
+ROM Size: 512 KB (or 1MB/2MB depending on your available Flash chips).
+
+RAM (Save) Size: 32 KB (256 Kbits) is required for game statistics.
+
+Save Technology: * Option A (Preferred): Battery-less Save using FRAM or MVSave technology.
+
+Option B: Traditional SRAM with a high-quality battery (CR2025/CR2032).
+
+Voltage: 5V (Compatible with original Game Boy DMG, Pocket, and Color).
+
+Shell/Case: Standard Grey or Transparent [Specify your choice].
+
+Pre-loading (Flashing): We will provide the .gb ROM file to be flashed during production.
+
+Specific Questions:
+
+Do you offer a discount for a quantity of 200 or 300 units?
+
+Can you provide a "Golden Sample" for testing before the full production run?
+
+What is the estimated lead time for production and shipping to [Your Country]?
+
+Thank you for your time and I look forward to your quotation.
+
+Best regards,
+
+[Ton Nom/Pseudo]
+
+
+. Pourquoi j'ai précisé "FRAM" ?
+Beaucoup de cartouches AliExpress "pas chères" utilisent un système appelé Batteryless Save qui patche ta ROM pour sauvegarder directement dans la puce Flash. C'est à éviter pour ton jeu, car ton code fait des écritures fréquentes (fin de mois, construction). La Flash s'use vite, alors que la FRAM ou la SRAM est faite pour ça.
+
+2. Le Mapper MBC5
+Ne les laisse pas te proposer du MBC1 ou du MBC3. Ton code compilé avec GBDK est optimisé pour le MBC5. C'est le plus stable et il gère mieux les banques de données que tu utilises pour Penultimo et tes cartes.
+
+3. Le "Golden Sample"
+N'accepte jamais une commande de 200 pièces sans avoir testé un échantillon final.
+
+Le test ultime : Lance le jeu, construis une ferme, attends que le mois passe (sauvegarde auto), éteins la console, retire la cartouche, attends 10 minutes, remets-la. Si ta ferme est toujours là, c'est gagné.
+
+4. Le sticker (L'étiquette)
+La plupart des fabricants peuvent imprimer l'étiquette pour toi si tu fournis un fichier .psd ou .png en haute résolution (300 DPI). C'est souvent inclus dans le prix ou pour quelques centimes de plus.
+
+C'est la touche finale qui rendra ton jeu professionnel. Une étiquette bien conçue fait toute la différence quand on tient la cartouche en main.
+
+Voici les spécifications techniques pour créer ton visuel.
+
+1. Dimensions de l'étiquette (Standard Game Boy)
+Les étiquettes de cartouches Game Boy originales et de reproduction respectent généralement ces dimensions :
+
+Dimensions physiques : 42 mm x 37 mm.
+
+Coins supérieurs : Ils doivent être légèrement arrondis (rayon d'environ 2 mm).
+
+Zone de sécurité : Garde tes textes et logos importants à au moins 2 mm du bord pour éviter qu'ils ne soient coupés lors de l'impression ou de la découpe.
+
+2. Configuration du fichier (Canvas / Photoshop)
+Pour une impression nette (sans flou), utilise ces réglages :
+
+Résolution : 300 DPI (Indispensable).
+
+Taille en pixels : 496 x 437 pixels.
+
+Mode colorimétrique : CMJN (CMYK) si ton imprimeur le demande, sinon le RVB (RGB) classique fera l'affaire pour la plupart des fabricants de cartouches flash.
+
+3. Éléments à inclure pour le style "Rétro"
+Pour que ton jeu ressemble à une sortie officielle de 1950 (ou de l'époque Game Boy), voici ce que tu peux ajouter :
+
+Le titre : Bien lisible au centre.
+
+L'illustration : Un beau dessin de Penultimo ou une vue aérienne de ta ville.
+
+Le Code Produit (Optionnel) : En bas à droite, tu peux inventer un code du type DMG-TRP-FRA (Tropico Game Boy France).
+
+Le Logo de ton studio : Un petit logo fictif en bas à gauche.
+
+Le "Seal of Quality" : Tu peux créer ton propre sceau "Approved by El Presidente" pour remplacer le logo Nintendo.
+
+4. Astuce pour la découpe
+Si tu décides d'imprimer les étiquettes toi-même sur du papier autocollant brillant :
+
+Utilise un cutter de précision (type X-Acto) et une règle métallique.
+
+Pour les coins arrondis, utilise un coupe-coin de petit diamètre ou fais-le très délicatement aux ciseaux.
+
+**************************************************
+
+les shacks font trop ramer : voir pour optimiser ou mettre la fonction pendant un dialogue ? DELETED
+
+LE COUT ELECTRIQUE :
+si la conso dépasse la prod, mettre un warning (actuellement si la conso dépasse la prod, ça empeche de mettre de nouvelles améliorations ; il faudrait aussi que ça empeche de poser les bâtiments qui requierent obligatoirement de l'élec ?)
+flag needs power sur un bat, flag has power
+
+***************************************************************************************************
+
+le curseur utilisé pendant la route fait effacer les sprites du hud du haut : changer le curseur, stop le cligno (idem pour curseur améliorations (on peut celui de 2x2 ?)
+
+********************************************************************************************************
+
+la suppression des routes n'est pas intuitive : il faudrait qu'on puisse maintenir A + gauche ou droite ou bas ou haut sur le d-pad, là il faut relacher la direction sur le d-pad puis rappuyer pour que ça supprime la route (comme quand on pose la route, on n'a pas besoin de relacher A ou la direction, on maintient les 2 et ça pose la route)
+
+
+pop up de confirmation quand new game en mode story
+
+la tile 0x7F pour les éclairs qui n'est pas la bonne en mode story : doit venir d'un probleme de bank, pas accès àce qu'il faut, voir avec claude
+
+
+*****************************************************************************************
+
+QUAND ON ECRASE UNE SAVE DE MODESTORY? et aussi en mode free play : à l'arrivée sur la map, le hud affiche une ligne (vide)
+
+*****************************************************************************************
+
+index pour les sprites de manque d'élec : 0x7F
+
+les améliorations sont dispos dès le début alors qu'on n'a pas de centrale ; il doit manquer une init de qqch
+
+***********************************************************************
+passer setup_story_params en bank 2, possible ? dans missions.c
+************************************************************************
+
+pour mine, conserverie et mediadisco : il faut de l'élec pour la construire :
+on checke si la prod d'élect est supérieur à la conso (dans la boucle de pose pour ces 3 bâtiments)
+si pas assez d'élec, mettre un message dans le hud (comme trigger starvation)
+
+
+
+
+
+
+
+
+
+
+
+
+ 

@@ -1,0 +1,72 @@
+affectent hap_d :
+
+Maison avec école proche : +2
+Maison avec bar proche : +2
+Maison avec upgrade 1 (eau courante) : +5
+Église (proportionnel aux workers) : +10 * occupants / jobs
+Bar (proportionnel aux workers) : +5 * occupants / jobs
+Pollution (usine/mine sans upgrade) : -2 par bâtiment proche
+Sans-abris : -2 par sans-abri (cap -20)
+Chômage : -unemployment_rate / 5
+Crime : -crime_rate / 5
+Pas d'électricité : -10
+
+
+Page 10 — bonheur (1/2) :
+
+Bâtiments : contribution nette des bâtiments (église, bar, école, pollution, etc.)
+Crime : -(crime_rate / 5)
+Chômage : -(unemployment_rate / 5)
+Sans-abri : jusqu'à -20
+Électricité : 0 ou -10
+Page 11 — bonheur (2/2) :
+
+Santé : health_hap_bonus (-10..+10)
+Décret food : decree_food_hap_bonus (0..+5)
+Famine : -1/mois ou 0
+Bonheur total actuel
+La valeur "bâtiments" est calculée par déduction (bonheur actuel moins toutes les autres contributions connues), donc elle reflète fidèlement l'effet net des bâtiments.
+
+, les améliorations affectent le bonheur — elles font partie du hap_d calculé dans la boucle des bâtiments :
+
+Maison + UPG1 (eau courante) : +5 par maison
+Maison avec école à proximité : +2 par maison
+Maison avec bar à proximité : +2 par maison
+Pollution (Usine/Mine) sans UPG2 : -2 par maison à proximité
+Tout ça est déjà inclus dans la valeur "bâtiments" de la page 10 (calculée par déduction), donc ces effets sont bien visibles — mais de façon agrégée, pas détaillée par type d'amélioration.
+
+
+Note : Le bar génère des revenus (rev_bar) uniquement avec l'amélioration "JEUX ARGENT" (upg2). Le mall génère des revenus de base dès qu'il a des employés. Pense à vider les sauvegardes avant de tester — GameState a changé avec les 2 nouveaux champs rev_mall et rev_bar.
+
+*********************************************************************************************************************************
+Le bonheur cible est 50 + somme des modificateurs. Avec tous les modificateurs à 0, il converge vers 50 à -2/mois.
+
+Pour dépasser 50 il faut que la somme des modificateurs soit positive. Les seuls qui peuvent être positifs :
+
+Modificateur	Comment l'obtenir
+bâtiments	église, bar, école à portée des maisons, maison upg1
+santé	hospital à portée → health > 50 → +1/mois (cap +5), health > 70 → cap +10
+décret food	activer le décret → +1/mois (cap +5)
+Les autres (crime, chômage, sans-abri, électricité, famine) sont soit 0 soit négatifs — ils ne peuvent pas aider.
+
+****************************
+ (base_t == TYPE_ROAD || base_t == VAL_ROAD || base_t == TYPE_ROAD_VERTI)  : il faut ajouter les tiles de route (dans ce code du main) pour que le refresh se fasse correctement
+
+************************************************************************
+vérifier les 3 boucles de répartition
+*************************************************************
+
+créer décret transport pour tous : ça affiche le tram (créer path tracing de tram, quand tram + voiture, la voiture disparait) ; améliore le bonheur et coute de l'argent
+nourriture pour tous coute de l'argen ? 
+***********************************************************
+
+Le port a 4 emplois et 10 de maintenance. Il ne produit pas encore de revenus spécifiques — à toi d'ajouter un case TILE_PORT_NW: dans le switch(t) de update_economy quand tu définis son effet économique.
+
+
+*******************************************
+charger les sprtes de voiture à partir de 05 ; et à leur place mettre l'icone sub du port
+
+********************************************************************************************************************************
+à supprimer ? dans save.c mais plus utilisé ?
+static const uint8_t wdepth_N[64]
+

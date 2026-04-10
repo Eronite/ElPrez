@@ -1,0 +1,14 @@
+*.asm
+.sfdx/
+bin/
+examples/
+include/
+lib/
+libexec/
+licenses/
+save avec batiments/
+*.lst
+*.o
+*.rel
+*.sym
+*.asm

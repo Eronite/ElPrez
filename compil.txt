@@ -1,0 +1,28 @@
+C:\GB\ab4crash\bin\lcc -Wl-yt0x1B -Wl-ya4 -Wl-yo4 -o test.gb main.c game_state.c graphics.c audio.c logic.c assets.c save.c menus.c missions.c lang.c intro.c
+
+
+avec rom usage : 
+C:\GB\ab4crash\bin\lcc -Wl-yt0x1B -Wl-ya4 -Wl-yo4 -Wl-m -o test.gb main.c game_state.c graphics.c audio.c logic.c assets.c save.c menus.c missions.c lang.c intro.c ; C:\GB\ab4crash\bin\romusage.exe test.map
+
+
+
+pour banking : GOOD1
+.\\build.bat
+
+
+
+good one ? : (lancé par claude)
+cmd.exe /c "c:\GB\ab4crash\build.bat" 2>&1
+
+ou : ?
+powershell.exe -Command "Set-Location 'C:\GB\ab4crash'; & '.\build.bat' 2>&1"
+
+
+ou ? :
+powershell -Command "cd 'C:\GB\ab4crash'; & '.\bin\lcc.exe' -Wl-yt0x1B -Wl-ya4 -Wl-yo4 -o test.gb main.c game_state.c graphics.c audio.c logic.c assets.c save.c menus.c missions.c lang.c intro.c 2>&1 | Out-String"
+
+
+
+now avec le makefile (8 cœurs) :
+dans C:\GB\acleangood1\
+.\bin\make -j8

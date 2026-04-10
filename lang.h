@@ -1,0 +1,89 @@
+#ifndef LANG_H
+#define LANG_H
+#include <stdint.h>
+
+typedef enum { LANG_FR = 0, LANG_EN = 1 } Language;
+extern uint8_t current_lang;
+
+// Index des textes
+enum {
+    TXT_STORY,
+    TXT_FREEPLAY,
+    TXT_RESUME,
+    TXT_SAVE,
+    TXT_STATS,
+    TXT_TO_MAIN_MENU,
+    TXT_STATS_ALMANACH,
+    TXT_STATS_GENERAL,
+    TXT_STATS_DATE,
+    TXT_STATS_POPULATION,
+    TXT_STATS_MONEY,
+    TXT_STATS_SOCIAL,
+    TXT_STATS_HOMELESS,
+    TXT_STATS_HOUSING_CAPACITY,
+    TXT_STATS_HAPPINESS,
+    TXT_STATS_ECONOMY,
+    TXT_STATS_MONTHLY_EXPENSE,
+    TXT_STATS_MONTHLY_PROFIT,
+    TXT_STATS_MISSION,
+    TXT_STATS_CURRENT_GOAL,
+    TXT_PAGE_NAV,
+    TXT_SAVE_IN_PROGRESS,
+    TXT_NO_SAVE,
+    TXT_NEW_GAME,
+    TXT_CONTINUE,
+    TXT_BACK,
+    TXT_A_TO_START,
+    TXT_INTRO1,
+    TXT_INTRO2,
+    TXT_INTRO3,
+    // Descriptions upgrades (5 strings par upgrade : 4 lignes desc + 1 effet)
+    TXT_UPG_ONETILE_1, TXT_UPG_ONETILE_1_L2, TXT_UPG_ONETILE_1_L3, TXT_UPG_ONETILE_1_L4, TXT_UPG_ONETILE_1_FX,
+    TXT_UPG_ONETILE_2, TXT_UPG_ONETILE_2_L2, TXT_UPG_ONETILE_2_L3, TXT_UPG_ONETILE_2_L4, TXT_UPG_ONETILE_2_FX,
+    TXT_UPG_HOUSE_1,   TXT_UPG_HOUSE_1_L2,   TXT_UPG_HOUSE_1_L3,   TXT_UPG_HOUSE_1_L4,   TXT_UPG_HOUSE_1_FX,
+    TXT_UPG_HOUSE_2,   TXT_UPG_HOUSE_2_L2,   TXT_UPG_HOUSE_2_L3,   TXT_UPG_HOUSE_2_L4,   TXT_UPG_HOUSE_2_FX,
+    TXT_UPG_FARM_1,    TXT_UPG_FARM_1_L2,    TXT_UPG_FARM_1_L3,    TXT_UPG_FARM_1_L4,    TXT_UPG_FARM_1_FX,
+    TXT_UPG_FARM_2,    TXT_UPG_FARM_2_L2,    TXT_UPG_FARM_2_L3,    TXT_UPG_FARM_2_L4,    TXT_UPG_FARM_2_FX,
+    TXT_UPG_PLANT_1,   TXT_UPG_PLANT_1_L2,   TXT_UPG_PLANT_1_L3,   TXT_UPG_PLANT_1_L4,   TXT_UPG_PLANT_1_FX,
+    TXT_UPG_PLANT_2,   TXT_UPG_PLANT_2_L2,   TXT_UPG_PLANT_2_L3,   TXT_UPG_PLANT_2_L4,   TXT_UPG_PLANT_2_FX,
+    TXT_UPG_WOOD_1,    TXT_UPG_WOOD_1_L2,    TXT_UPG_WOOD_1_L3,    TXT_UPG_WOOD_1_L4,    TXT_UPG_WOOD_1_FX,
+    TXT_UPG_WOOD_2,    TXT_UPG_WOOD_2_L2,    TXT_UPG_WOOD_2_L3,    TXT_UPG_WOOD_2_L4,    TXT_UPG_WOOD_2_FX,
+    TXT_UPG_MINE_1,    TXT_UPG_MINE_1_L2,    TXT_UPG_MINE_1_L3,    TXT_UPG_MINE_1_L4,    TXT_UPG_MINE_1_FX,
+    TXT_UPG_MINE_2,    TXT_UPG_MINE_2_L2,    TXT_UPG_MINE_2_L3,    TXT_UPG_MINE_2_L4,    TXT_UPG_MINE_2_FX,
+    TXT_UPG_FACT_1,    TXT_UPG_FACT_1_L2,    TXT_UPG_FACT_1_L3,    TXT_UPG_FACT_1_L4,    TXT_UPG_FACT_1_FX,
+    TXT_UPG_FACT_2,    TXT_UPG_FACT_2_L2,    TXT_UPG_FACT_2_L3,    TXT_UPG_FACT_2_L4,    TXT_UPG_FACT_2_FX,
+    TXT_UPG_MALL_1,    TXT_UPG_MALL_1_L2,    TXT_UPG_MALL_1_L3,    TXT_UPG_MALL_1_L4,    TXT_UPG_MALL_1_FX,
+    TXT_UPG_MALL_2,    TXT_UPG_MALL_2_L2,    TXT_UPG_MALL_2_L3,    TXT_UPG_MALL_2_L4,    TXT_UPG_MALL_2_FX,
+    TXT_UPG_POL_1,     TXT_UPG_POL_1_L2,     TXT_UPG_POL_1_L3,     TXT_UPG_POL_1_L4,     TXT_UPG_POL_1_FX,
+    TXT_UPG_POL_2,     TXT_UPG_POL_2_L2,     TXT_UPG_POL_2_L3,     TXT_UPG_POL_2_L4,     TXT_UPG_POL_2_FX,
+    TXT_UPG_CHU_1,     TXT_UPG_CHU_1_L2,     TXT_UPG_CHU_1_L3,     TXT_UPG_CHU_1_L4,     TXT_UPG_CHU_1_FX,
+    TXT_UPG_CHU_2,     TXT_UPG_CHU_2_L2,     TXT_UPG_CHU_2_L3,     TXT_UPG_CHU_2_L4,     TXT_UPG_CHU_2_FX,
+    TXT_UPG_HOS_1,     TXT_UPG_HOS_1_L2,     TXT_UPG_HOS_1_L3,     TXT_UPG_HOS_1_L4,     TXT_UPG_HOS_1_FX,
+    TXT_UPG_HOS_2,     TXT_UPG_HOS_2_L2,     TXT_UPG_HOS_2_L3,     TXT_UPG_HOS_2_L4,     TXT_UPG_HOS_2_FX,
+    TXT_UPG_SCH_1,     TXT_UPG_SCH_1_L2,     TXT_UPG_SCH_1_L3,     TXT_UPG_SCH_1_L4,     TXT_UPG_SCH_1_FX,
+    TXT_UPG_SCH_2,     TXT_UPG_SCH_2_L2,     TXT_UPG_SCH_2_L3,     TXT_UPG_SCH_2_L4,     TXT_UPG_SCH_2_FX,
+    TXT_UPG_PWR_1,     TXT_UPG_PWR_1_L2,     TXT_UPG_PWR_1_L3,     TXT_UPG_PWR_1_L4,     TXT_UPG_PWR_1_FX,
+    TXT_UPG_PWR_2,     TXT_UPG_PWR_2_L2,     TXT_UPG_PWR_2_L3,     TXT_UPG_PWR_2_L4,     TXT_UPG_PWR_2_FX,
+    TXT_UPG_BAR_1,     TXT_UPG_BAR_1_L2,     TXT_UPG_BAR_1_L3,     TXT_UPG_BAR_1_L4,     TXT_UPG_BAR_1_FX,
+    TXT_UPG_BAR_2,     TXT_UPG_BAR_2_L2,     TXT_UPG_BAR_2_L3,     TXT_UPG_BAR_2_L4,     TXT_UPG_BAR_2_FX,
+    TXT_UPG_DIS_1,     TXT_UPG_DIS_1_L2,     TXT_UPG_DIS_1_L3,     TXT_UPG_DIS_1_L4,     TXT_UPG_DIS_1_FX,
+    TXT_UPG_DIS_2,     TXT_UPG_DIS_2_L2,     TXT_UPG_DIS_2_L3,     TXT_UPG_DIS_2_L4,     TXT_UPG_DIS_2_FX
+};
+
+// Les deux dictionnaires
+extern char *strings_fr[];
+extern char *strings_en[];
+
+// Fonction banked (bank 2) — ne pas appeler directement depuis une autre bank.
+// Utiliser nb_get_text() via le wrapper nonbanked défini dans main.c.
+char* get_text(uint8_t idx);
+
+// Wrapper nonbanked défini dans main.c (ROM0) — safe depuis n'importe quelle bank.
+char* nb_get_text(uint8_t idx);
+
+// Macro pratique : passe par le wrapper nonbanked
+#define GET_TEXT(idx) nb_get_text(idx)
+
+#endif
+
+

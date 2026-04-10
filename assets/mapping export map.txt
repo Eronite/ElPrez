@@ -1,0 +1,28 @@
+seaMap6.gbr, à partir de waterCustom3.gbr
+à partir de waterMap6a[] dans waterMap6a.c, remplacer les données de map_mission1_water[4096] de map_mission1_water.c, avec ce mapping :
+1ere tile de l'export (mer pleine, en bordure ; avec motif) : 0x00 dans le tableau de l'export = 0x6D dans le code
+2e tile de l'export (bordure haut gauche) : 0x01 dans le tableau de l'export = 0x6E dans le code
+3e tile de l'export (bordure haut droite) : 0x02 dans le tableau de l'export = 0x6F dans le code
+4e tile de l'export (bordure bas gauche) : 0x03 dans le tableau de l'export = 0x70 dans le code
+5e tile de l'export (bordure bas droite) : 0x04 dans le tableau de l'export = 0x71 dans le code
+6e tile de l'export (terre motif) : 0x05 dans le tableau de l'export = 0x80 dans le code
+7e tile de l'export (terre sans motif = vide) : 0x06 dans le tableau de l'export = 0x00 dans le code
+8e tile de l'export (minerai) : 0x07SS dans le tableau de l'export = 0xFA dans le code
+9e tile de l'export (mer pleine, hors bordure ; sans motif) : 0x08 dans le tableau de l'export = 0x72 dans le code
+
+seaMap7.gbr, à partir de waterCustom4.gbr
+à partir de waterMapg1[] dans waterMap6a.c, remplacer les données de map_mission1_water[4096] de map_mission1_water.c, avec ce mapping :
+1ere tile de l'export (mer pleine, bordure droite) : 0x00 dans le tableau de l'export = 0x6D dans le code
+2e tile de l'export (bordure haut gauche) : 0x01 dans le tableau de l'export = 0x6E dans le code
+3e tile de l'export (bordure haut droite) : 0x02 dans le tableau de l'export = 0x6F dans le code
+4e tile de l'export (bordure bas gauche) : 0x03 dans le tableau de l'export = 0x70 dans le code
+5e tile de l'export (bordure bas droite) : 0x04 dans le tableau de l'export = 0x71 dans le code
+6e tile de l'export (terre motif) : 0x05 dans le tableau de l'export = 0x80 dans le code
+7e tile de l'export (terre sans motif = vide) : 0x06 dans le tableau de l'export = 0x00 dans le code
+8e tile de l'export (minerai) : 0x07SS dans le tableau de l'export = 0xFA dans le code
+9e tile de l'export (mer pleine, hors bordure ; sans motif) : 0x08 dans le tableau de l'export = 0x72 dans le code
+10e tile de l'export (mer pleine, bordure gauche) : 0x09 dans le tableau de l'export = 0x76 dans le code
+11e tile de l'export (mer pleine, bordure haut) : 0x0A dans le tableau de l'export = 0x77 dans le code
+12e tile de l'export (mer pleine, bordure bas) : 0x0B dans le tableau de l'export = 0x78 dans le code
+
+CORRIGER MINIMAP, pas ok depuis les changements de tiles pour les bordeures terre mer

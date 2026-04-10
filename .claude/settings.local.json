@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls c:/GB/acleanhud/*.c)",
+      "Bash(python3 gen_gbr.py)"
+    ]
+  }
+}

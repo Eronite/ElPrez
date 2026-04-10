@@ -1,0 +1,158 @@
+Créer une mission — guide complet
+1. Écrire les textes → lang.h + lang.c
+Ajoute un index dans l'enum de lang.h :
+
+
+TXT_MISSION2_1,
+TXT_MISSION2_2,
+TXT_MISSION2_3,
+Puis ajoute les chaînes correspondantes dans les deux tableaux de lang.c :
+
+
+// strings_fr[] :
+[TXT_MISSION2_1] = "Construis 2 mines\npour extraire le minerai.",
+[TXT_MISSION2_2] = "Bien! Maintenant\natteins 500 de minerai.",
+[TXT_MISSION2_3] = "Bravo! Mission\naccomplie.",
+
+// strings_en[] :
+[TXT_MISSION2_1] = "Build 2 mines\nto extract ore.",
+[TXT_MISSION2_2] = "Good! Now reach\n500 ore.",
+[TXT_MISSION2_3] = "Well done! Mission\ncomplete.",
+2. Définir les étapes → missions.c
+Ajoute un nouveau tableau dans missions.c. Il est déjà en #pragma bank 2.
+
+
+MissionStep mission2[] = {
+    // étape 0 — dialogue + objectif : construire 2 mines
+    // {dialogue_idx,      portrait,          money, pop, food_stk, food_prod, hap, ore, cult, type,         count}
+    {TXT_MISSION2_1, PORTRAIT_PENULTIMO,    0,   0,    0,        0,   0,   0,    0, TILE_MINE_NW, 2},
+
+    // étape 1 — dialogue + objectif : 500 minerai en stock
+    {TXT_MISSION2_2, PORTRAIT_PENULTIMO,    0,   0,    0,        0,   0, 500,    0, 0,            0},
+
+    // étape finale — dialogue seul, tous objectifs à 0 = pas de validation auto
+    {TXT_MISSION2_3, PORTRAIT_PENULTIMO,    0,   0,    0,        0,   0,   0,    0, 0,            0},
+};
+Déclare-la aussi dans missions.h :
+
+
+extern MissionStep mission2[];
+3. Brancher la mission → story_mode.c
+Actuellement ligne 70, la sélection est fixe sur mission1. Pour plusieurs missions, ajoute un champ mission_id dans GameState et adapte :
+
+
+MissionStep *steps;
+if      (game.mission_id == 1) steps = mission1;
+else if (game.mission_id == 2) steps = mission2;
+else                           steps = mission1;
+Pour l'instant, pour tester mission2, change juste la ligne 70 temporairement :
+
+
+MissionStep *steps = mission2;
+Résumé des champs MissionStep
+Champ	Type	Condition vérifiée
+dialogue_idx	TXT_*	texte affiché en début d'étape
+portrait_id	PORTRAIT_*	personnage qui parle
+target_money	int32_t	game.money >= X
+target_pop	uint16_t	game.population >= X
+target_food_stock	uint16_t	game.foodStock >= X
+target_food_prod	uint16_t	game.foodProduction >= X
+target_happiness	uint8_t	game.avg_happiness >= X
+target_ore	uint16_t	game.ore_stock >= X
+target_culture	uint16_t	game.culture_stock >= X
+target_type	TILE_*_NW	compter bâtiments de ce type
+target_count	uint8_t	nombre requis
+Un champ à 0 est ignoré. Une étape avec tous les champs à 0 = étape finale (le jeu ne passe jamais à l'étape suivante automatiquement).
+
+
+
+********************************
+Pour créer une mission, tu touches 2 fichiers :
+
+1. lang.h + lang.c — ajouter les index et textes :
+
+
+// lang.h
+TXT_GOAL_M2_1,
+TXT_GOAL_M2_2,
+
+// lang.c (strings_fr et strings_en)
+"Objectif: 2 mines",
+"Objectif: 500 minerai",
+2. missions.c — définir les étapes avec le nouveau champ goal_idx en 3e position :
+
+
+// dialogue_idx,       portrait,          goal_idx,       money, pop, fs, fp, hap, ore, cult, type,         count
+{TXT_MISSION2_1, PORTRAIT_PENULTIMO, TXT_GOAL_M2_1,     0,   0,  0,  0,   0,   0,    0, TILE_MINE_NW, 2},
+{TXT_MISSION2_2, PORTRAIT_PENULTIMO, TXT_GOAL_M2_2,     0,   0,  0,  0,   0, 500,    0, 0,            0},
+Ce qui s'affiche automatiquement dans la page Mission (page 4 de l'Almanach) :
+
+Le texte goal_idx en haut (titre de l'étape)
+Chaque objectif non-nul listé avec [ ] ou [X] selon si c'est atteint ou non, mis à jour en temps réel
+
+*************************************
+
+où se trouve le texte de TXT_MISSION1_1 ? comment est fait le lien entre TXT_MISSION1_1 et le texte qu'il contient ? (je veux créer des TXT_MISSION1_2, TXT_MISSION1_3 mais je ne sais pas comment les "lier" au texte qu'ils contiennent)
+Le lien se fait par position dans le tableau. C'est tout.
+
+La mécanique en 3 étapes
+1. lang.h — l'enum définit des numéros
+
+
+enum {
+    TXT_STORY,        // = 0
+    TXT_FREEPLAY,     // = 1
+    TXT_RESUME,       // = 2
+    ...
+    TXT_MISSION1_1,   // = 6  ← juste un nombre
+    TXT_MISSION1_2,   // = 7
+    TXT_MISSION1_3,   // = 8
+    TXT_MISSION1_4,   // = 9
+    ...
+};
+2. lang.c — les tableaux associent chaque position à un texte
+
+
+char *strings_fr[] = {
+    "MODE HISTOIRE",           // [0] = TXT_STORY
+    "PARTIE LIBRE",            // [1] = TXT_FREEPLAY
+    "REPRENDRE",               // [2] = TXT_RESUME
+    ...
+    "Bienvenue, Presidente!...",// [6] = TXT_MISSION1_1
+    "Excellent! ...",           // [7] = TXT_MISSION1_2  ← LE TEXTE EST ICI
+    "Essayons ...",             // [8] = TXT_MISSION1_3
+    "Fin de la mission",        // [9] = TXT_MISSION1_4
+    ...
+};
+Le lien c'est simplement : TXT_MISSION1_2 == 7, et strings_fr[7] = le texte. La macro GET_TEXT(TXT_MISSION1_2) fait juste strings_fr[7].
+
+3. La règle absolue : l'ordre dans l'enum DOIT correspondre à l'ordre dans les tableaux.
+
+Pour créer TXT_MISSION1_2 et TXT_MISSION1_3
+Les entrées sont déjà dans l'enum (lang.h) et leurs textes sont déjà dans les tableaux (lang.c). Ils existent, mais les étapes dans missions.c sont commentées.
+
+Pour les activer, il suffit de décommenter les lignes dans missions.c :
+
+
+MissionStep mission1[] = {
+    {TXT_MISSION1_1, PORTRAIT_PENULTIMO, TXT_GOAL_M1_1,    0,  0, 0, 0, 0, 0, 0, TILE_FARM_NW, 1},
+    {TXT_MISSION1_2, PORTRAIT_PENULTIMO, TXT_GOAL_M1_2, 5000,  0, 0, 0, 0, 0, 0, 0,            0},
+    {TXT_MISSION1_3, PORTRAIT_PENULTIMO, TXT_GOAL_M1_3,    0, 30, 0, 0, 0, 0, 0, 0,            0},
+    {TXT_MISSION1_4, PORTRAIT_PENULTIMO, TXT_GOAL_M1_4,    0,  0, 0, 0, 0, 0, 0, 0,            0},
+};
+Et modifier les textes dans lang.c à ta convenance.
+
+
+
+**********************************************************************
+
+
+tester missions
+tester comment fonctionne la route (activation des bâtiments)
+finir les améliorations
+mettre les variables dans le menu pause almanach
+créer tuiles port, sprite bateau
+
+
+
+
