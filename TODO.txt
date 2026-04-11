@@ -42,7 +42,13 @@ implémnter economie : AAAaclean169\progression_economie_todo.md
 mettre cadre sur la description d'amelioration
 
 
-*
+quand un objectif est validé, on ne doit pas pouvoir le dévalider (mission 1, on arrive à 6000 ça valide, mais si on dépense et tombe en dessous de 6000, ça invalide, on ne veut pas ça)
+*********************************************************************************************
+*sur les onetilehome on ne peut pas toujouros ouvrir le menu des infos / améliorations
+***************************************************************************************************************
+
+quand un objectif de mission est atteint, on doit avoir un dialogue de penultimo (il y en avait avant la refacto, ils sont encore dans le code ?)
+*****************************************************************************************************************************
 *
 *
 

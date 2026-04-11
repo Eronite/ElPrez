@@ -90,11 +90,11 @@ void story_mode_logic(void) {
         nb_story_dialogue_b2(m->portrait_id, m->dialogue_idx);
         game.dialogue_seen = 1;
 
-        // pour les flash alerte manque d'élec (sprite écrasé sinon): 
+        // pour les flash alerte manque d'élec (sprite écrasé sinon):
         //init_flash_pool();
 
-        if (game.current_step > 0) {
-            // Retour propre à la map après dialogue mid-game
+        if (game.current_step > 0 || game.mission_id > 0) {
+            // Retour propre à la map après dialogue mid-game ou début de mission suivante
             BGP_REG = 0xFF;
             move_win(7, 136);
             nb_update_hud_b2();
@@ -103,13 +103,35 @@ void story_mode_logic(void) {
         return;
     }
 
+    // --- Étape sans objectifs = dialogue de fin → passer immédiatement à la mission suivante ---
+    {
+        uint8_t has_any = (m->target_money      > 0) |
+                          (m->target_pop        > 0) |
+                          (m->target_food_stock > 0) |
+                          (m->target_food_prod  > 0) |
+                          (m->target_happiness  > 0) |
+                          (m->target_ore        > 0) |
+                          (m->target_culture    > 0) |
+                          (m->target_type      != 0) |
+                          (m->target_type2     != 0);
+        if (!has_any) {
+            game.mission_id++;
+            game.current_step = 0;
+            game.dialogue_seen = 0;
+            nb_play_mission_b2();
+            delay(250);
+            fade_out();
+            return;
+        }
+    }
+
     // --- Vérification mensuelle des objectifs ---
     if (!month_passed_flag) return;
     month_passed_flag = 0;
 
     if (!objectives_met(m)) return;
 
-    // --- Objectifs remplis → étape suivante ---
+    // --- Objectifs remplis → étape suivante (dialogue de fin) ---
     game.current_step++;
     game.dialogue_seen = 0;
     nb_play_mission_b2();
