@@ -56,8 +56,11 @@ voir si economy.c en bank 3 est encore appelé qq part ou bien dead code
 hépital dans les textes de mission 3
 éle pour ile a cote de prospere)
 espace apres discotheque ou silencieuse
+premier dialogue : à (é)
 ************************************
+bug salaires qui reviennent à 0, seulement de temps en temps, et c'est quand on éteint la console et qu'on la rallume (pas quand on quitte vers le menu principal et qu'on revient)
 *
+***********TODO :TEST LE FIX DES SALAIRES QUI SONT A 0 QD ON ETEINT LA GB ET RECHARGE UNE GAME (fix pas commit)
 
 
 ajouter les deux points à la fonction de draw text

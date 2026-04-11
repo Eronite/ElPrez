@@ -348,21 +348,19 @@ uint8_t load_saves_screen() {
                     {
                         uint8_t *sram_upg = (uint8_t *)(0xA000 + 4096) + sizeof(GameState);
                         uint8_t saved_count = *sram_upg++;
-                        if (saved_count == building_count) {
-                            uint8_t k, j;
-                            for (k = 0; k < saved_count; k++) {
-                                uint16_t sidx = ((uint16_t)sram_upg[0] << 8) | sram_upg[1];
-                                uint8_t  sflg = sram_upg[2];
-                                uint8_t  ssal = sram_upg[3];
-                                uint8_t  socc = sram_upg[4];
-                                sram_upg += 5;
-                                for (j = 0; j < building_count; j++) {
-                                    if (building_registry[j].map_idx == sidx) {
-                                        building_registry[j].flags |= sflg & (BLDG_UPG1_APPLIED | BLDG_UPG2_APPLIED | BLDG_FLAG_HAS_ORE);
-                                        building_salary[j]              = ssal;
-                                        building_registry[j].occupants  = socc;
-                                        break;
-                                    }
+                        uint8_t k, j;
+                        for (k = 0; k < saved_count; k++) {
+                            uint16_t sidx = ((uint16_t)sram_upg[0] << 8) | sram_upg[1];
+                            uint8_t  sflg = sram_upg[2];
+                            uint8_t  ssal = sram_upg[3];
+                            uint8_t  socc = sram_upg[4];
+                            sram_upg += 5;
+                            for (j = 0; j < building_count; j++) {
+                                if (building_registry[j].map_idx == sidx) {
+                                    building_registry[j].flags |= sflg & (BLDG_UPG1_APPLIED | BLDG_UPG2_APPLIED | BLDG_FLAG_HAS_ORE);
+                                    building_salary[j]              = ssal;
+                                    building_registry[j].occupants  = socc;
+                                    break;
                                 }
                             }
                         }
@@ -603,21 +601,19 @@ void load_story_game(uint8_t bank_index) {
         {
             uint8_t *sram_upg = (uint8_t *)(0xA000 + 4096) + sizeof(GameState);
             uint8_t saved_count = *sram_upg++;
-            if (saved_count == building_count) {
-                uint8_t k, j;
-                for (k = 0; k < saved_count; k++) {
-                    uint16_t sidx = ((uint16_t)sram_upg[0] << 8) | sram_upg[1];
-                    uint8_t  sflg = sram_upg[2];
-                    uint8_t  ssal = sram_upg[3];
-                    uint8_t  socc = sram_upg[4];
-                    sram_upg += 5;
-                    for (j = 0; j < building_count; j++) {
-                        if (building_registry[j].map_idx == sidx) {
-                            building_registry[j].flags |= sflg & (BLDG_UPG1_APPLIED | BLDG_UPG2_APPLIED | BLDG_FLAG_HAS_ORE);
-                            building_salary[j]             = ssal;
-                            building_registry[j].occupants = socc;
-                            break;
-                        }
+            uint8_t k, j;
+            for (k = 0; k < saved_count; k++) {
+                uint16_t sidx = ((uint16_t)sram_upg[0] << 8) | sram_upg[1];
+                uint8_t  sflg = sram_upg[2];
+                uint8_t  ssal = sram_upg[3];
+                uint8_t  socc = sram_upg[4];
+                sram_upg += 5;
+                for (j = 0; j < building_count; j++) {
+                    if (building_registry[j].map_idx == sidx) {
+                        building_registry[j].flags |= sflg & (BLDG_UPG1_APPLIED | BLDG_UPG2_APPLIED | BLDG_FLAG_HAS_ORE);
+                        building_salary[j]             = ssal;
+                        building_registry[j].occupants = socc;
+                        break;
                     }
                 }
             }

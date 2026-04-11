@@ -30,10 +30,10 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      00000060  l__HEADER |    000000AB  l__HEADER |    00000200  s__CODE  
      0000042B  l__INITIA |    0000042B  l__INITIA |    0000136A  l__HOME  
      000015E0  l__DATA   |    00002000  _rROMB0   |    0000219E  l__CODE  
-     0000239E  s__HOME   |    000027A2  l__CODE_5 |    00003000  _rROMB1  
+     0000239E  s__HOME   |    000027B6  l__CODE_5 |    00003000  _rROMB1  
      00003148  l__CODE_4 |    000031F1  l__CODE_3 |    00003708  s__BASE  
      00003708  s__CODE_0 |    00003708  s__INITIA |    00003708  s__LIT   
-     000039AA  l__CODE_1 |    00003ADF  l__CODE_2 |    00003B33  s__GSINIT
+     000039AA  l__CODE_1 |    00003B05  l__CODE_2 |    00003B33  s__GSINIT
      00003B3F  s__GSFINA |    00004000  _rMBC7_SR |    00004000  _rRAMB   
      00008000  __VRAM    |    00008000  __VRAM800 |    00008800  __VRAM880
      00009000  __VRAM900 |    00009800  __SCRN0   |    00009C00  __SCRN1  
@@ -458,26 +458,26 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE_5                00054000    000027A2 =       10146. bytes (REL,CON)
+_CODE_5                00054000    000027B6 =       10166. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     000541EE  _update_e |    000559C9  _copy_mis
+     000541EE  _update_e |    000559DD  _copy_mis
 ASxxxx Linker V03.00/V05.40 + sdld,  page 32.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE_2                00024000    00003ADF =       15071. bytes (REL,CON)
+_CODE_2                00024000    00003B05 =       15109. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
      00024000  _confirm_ |    00024209  _wipe_slo |    0002422E  _load_sav
-     00024764  _save_sto |    00024EB1  _load_sto |    00025054  _main_men
-     000251B9  _pause_me |    0002560E  _confirm_ |    000257A8  _story_su
-     00025A63  _language |    00025B4B  _init_lan |    00025B52  _get_text
-     00027159  _intro_bu |    00027559  _generate |    00027628  _display_
-     00027725  _intro_ti |    000278BC  _show_min
+     0002475B  _save_sto |    00024EA8  _load_sto |    0002507A  _main_men
+     000251DF  _pause_me |    00025634  _confirm_ |    000257CE  _story_su
+     00025A89  _language |    00025B71  _init_lan |    00025B78  _get_text
+     0002717F  _intro_bu |    0002757F  _generate |    0002764E  _display_
+     0002774B  _intro_ti |    000278E2  _show_min
 ASxxxx Linker V03.00/V05.40 + sdld,  page 33.
 Hexadecimal  [32-Bits]
 
