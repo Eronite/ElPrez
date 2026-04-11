@@ -230,10 +230,16 @@ while (menu_running) {
                     set_sprite_prop(chk_spr, 0x00u);
                     move_sprite(chk_spr, 16u, (uint8_t)(row * 8u + 16u));
                     chk_spr++;
-                    if      (cur.target_type == TILE_FARM_NW)  draw_text(3, row, "Fermes:", 1);
-                    else if (cur.target_type == TILE_HOUSE_NW) draw_text(3, row, "Maisons:", 1);
-                    else if (cur.target_type == TILE_MINE_NW)  draw_text(3, row, "Mines:", 1);
-                    else                                        draw_text(3, row, "Batiment:", 1);
+                    if      (cur.target_type == TILE_FARM_NW)       draw_text(3, row, "Fermes:", 1);
+                    else if (cur.target_type == TILE_HOUSE_NW)      draw_text(3, row, "Maisons:", 1);
+                    else if (cur.target_type == TILE_MINE_NW)       draw_text(3, row, "Mines:", 1);
+                    else if (cur.target_type == TILE_PLANTATION_NW) draw_text(3, row, "Plantation:", 1);
+                    else if (cur.target_type == TILE_CHURCH_NW)     draw_text(3, row, "Eglise:", 1);
+                    else if (cur.target_type == TILE_SCHOOL_NW)     draw_text(3, row, "Ecole:", 1);
+                    else if (cur.target_type == TILE_HOSPITAL_NW)   draw_text(3, row, "Hopital:", 1);
+                    else if (cur.target_type == TILE_POLICE_NW)     draw_text(3, row, "Police:", 1);
+                    else if (cur.target_type == TILE_POWER_NW)      draw_text(3, row, "Centrale:", 1);
+                    else                                             draw_text(3, row, "Batiment:", 1);
                     draw_number(15, row, cur.target_count, 1);
                     row += 2;
                 }
@@ -250,10 +256,16 @@ while (menu_running) {
                     set_sprite_prop(chk_spr, 0x00u);
                     move_sprite(chk_spr, 16u, (uint8_t)(row * 8u + 16u));
                     chk_spr++;
-                    if      (cur.target_type2 == TILE_FARM_NW)  draw_text(3, row, "Fermes:", 1);
-                    else if (cur.target_type2 == TILE_HOUSE_NW) draw_text(3, row, "Maisons:", 1);
-                    else if (cur.target_type2 == TILE_MINE_NW)  draw_text(3, row, "Mines:", 1);
-                    else                                         draw_text(3, row, "Batiment:", 1);
+                    if      (cur.target_type2 == TILE_FARM_NW)       draw_text(3, row, "Fermes:", 1);
+                    else if (cur.target_type2 == TILE_HOUSE_NW)      draw_text(3, row, "Maisons:", 1);
+                    else if (cur.target_type2 == TILE_MINE_NW)       draw_text(3, row, "Mines:", 1);
+                    else if (cur.target_type2 == TILE_PLANTATION_NW) draw_text(3, row, "Plantation:", 1);
+                    else if (cur.target_type2 == TILE_CHURCH_NW)     draw_text(3, row, "Eglise:", 1);
+                    else if (cur.target_type2 == TILE_SCHOOL_NW)     draw_text(3, row, "Ecole:", 1);
+                    else if (cur.target_type2 == TILE_HOSPITAL_NW)   draw_text(3, row, "Hopital:", 1);
+                    else if (cur.target_type2 == TILE_POLICE_NW)     draw_text(3, row, "Police:", 1);
+                    else if (cur.target_type2 == TILE_POWER_NW)      draw_text(3, row, "Centrale:", 1);
+                    else                                              draw_text(3, row, "Batiment:", 1);
                     draw_number(15, row, cur.target_count2, 1);
                     row += 2;
                 }
