@@ -50,6 +50,13 @@ quand un objectif est validé, on ne doit pas pouvoir le dévalider (mission 1, 
 quand un objectif de mission est atteint, on doit avoir un dialogue de penultimo (il y en avait avant la refacto, ils sont encore dans le code ?)
 *****************************************************************************************************************************
 *
+voir si economy.c en bank 3 est encore appelé qq part ou bien dead code
+
+"que demander de plus" dans un texte de penultimo : suivi d'une tile random
+hépital dans les textes de mission 3
+éle pour ile a cote de prospere)
+espace apres discotheque ou silencieuse
+************************************
 *
 
 

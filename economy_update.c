@@ -394,6 +394,7 @@ void update_economy(void) {
     game.rev_ore     = (uint16_t)((uint32_t)ore_p     * PRICE_ORE);
     game.rev_culture = (uint16_t)((uint32_t)culture_p * PRICE_CULTURE);
     game.monthly_revenue += game.rev_ore + game.rev_culture;
+    game.culture_stock += culture_p;
 
     if (game.decree_tram) game.monthly_expenses += 1000;
     game.money += (int32_t)game.monthly_revenue - (int32_t)game.monthly_expenses;

@@ -30,7 +30,7 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      00000060  l__HEADER |    000000AB  l__HEADER |    00000200  s__CODE  
      0000042B  l__INITIA |    0000042B  l__INITIA |    0000136A  l__HOME  
      000015E0  l__DATA   |    00002000  _rROMB0   |    0000219E  l__CODE  
-     0000239E  s__HOME   |    0000278E  l__CODE_5 |    00003000  _rROMB1  
+     0000239E  s__HOME   |    000027A2  l__CODE_5 |    00003000  _rROMB1  
      00003148  l__CODE_4 |    000031F1  l__CODE_3 |    00003708  s__BASE  
      00003708  s__CODE_0 |    00003708  s__INITIA |    00003708  s__LIT   
      000039AA  l__CODE_1 |    00003ADF  l__CODE_2 |    00003B33  s__GSINIT
@@ -458,11 +458,11 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE_5                00054000    0000278E =       10126. bytes (REL,CON)
+_CODE_5                00054000    000027A2 =       10146. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     000541EE  _update_e |    000559B5  _copy_mis
+     000541EE  _update_e |    000559C9  _copy_mis
 ASxxxx Linker V03.00/V05.40 + sdld,  page 32.
 Hexadecimal  [32-Bits]
 
