@@ -79,6 +79,7 @@ static uint8_t objectives_met(MissionStep *m) {
 // ============================================================
 void story_mode_logic(void) {
     if (game.game_mode != MODE_STORY) return;
+    if (game.mission_id >= 4) return;
 
     // Lecture de l'étape courante depuis bank 4 (missions.c)
     MissionStep m_local;
@@ -120,7 +121,15 @@ void story_mode_logic(void) {
             game.dialogue_seen = 0;
             nb_play_mission_b2();
             delay(250);
-            fade_out();
+            if (game.mission_id >= 4) {
+                // Dernière mission terminée : rétablir la palette au lieu de noircir
+                BGP_REG = 0xE4;
+                move_win(7, 136);
+                nb_update_hud_b2();
+                fade_in();
+            } else {
+                fade_out();
+            }
             return;
         }
     }

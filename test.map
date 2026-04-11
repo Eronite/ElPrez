@@ -31,7 +31,7 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      0000042B  l__INITIA |    0000042B  l__INITIA |    0000136A  l__HOME  
      000015E0  l__DATA   |    00002000  _rROMB0   |    0000219E  l__CODE  
      0000239E  s__HOME   |    000027B6  l__CODE_5 |    00003000  _rROMB1  
-     000030D5  l__CODE_3 |    00003148  l__CODE_4 |    00003708  s__BASE  
+     000030D5  l__CODE_3 |    0000316B  l__CODE_4 |    00003708  s__BASE  
      00003708  s__CODE_0 |    00003708  s__INITIA |    00003708  s__LIT   
      000039B3  l__CODE_1 |    00003B05  l__CODE_2 |    00003B33  s__GSINIT
      00003B3F  s__GSFINA |    00004000  _rMBC7_SR |    00004000  _rRAMB   
@@ -483,13 +483,13 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE_4                00044000    00003148 =       12616. bytes (REL,CON)
+_CODE_4                00044000    0000316B =       12651. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     00044000  _story_ge |    000442C1  _story_mo |    000443F0  _map_miss
-     000453F0  _draw_men |    000454C4  _font_lc_ |    00045684  _menu_bor
-     00045704  _decrets_ |    00045A47  _stats_sc
+     00044000  _story_ge |    000442C1  _story_mo |    00044413  _map_miss
+     00045413  _draw_men |    000454E7  _font_lc_ |    000456A7  _menu_bor
+     00045727  _decrets_ |    00045A6A  _stats_sc
 ASxxxx Linker V03.00/V05.40 + sdld,  page 34.
 Hexadecimal  [32-Bits]
 
