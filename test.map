@@ -31,9 +31,9 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      0000042B  l__INITIA |    0000042B  l__INITIA |    0000136A  l__HOME  
      000015E0  l__DATA   |    00002000  _rROMB0   |    0000219E  l__CODE  
      0000239E  s__HOME   |    000027B6  l__CODE_5 |    00003000  _rROMB1  
-     00003148  l__CODE_4 |    000031F1  l__CODE_3 |    00003708  s__BASE  
+     000030D5  l__CODE_3 |    00003148  l__CODE_4 |    00003708  s__BASE  
      00003708  s__CODE_0 |    00003708  s__INITIA |    00003708  s__LIT   
-     000039AA  l__CODE_1 |    00003B05  l__CODE_2 |    00003B33  s__GSINIT
+     000039B3  l__CODE_1 |    00003B05  l__CODE_2 |    00003B33  s__GSINIT
      00003B3F  s__GSFINA |    00004000  _rMBC7_SR |    00004000  _rRAMB   
      00008000  __VRAM    |    00008000  __VRAM800 |    00008800  __VRAM880
      00009000  __VRAM900 |    00009800  __SCRN0   |    00009C00  __SCRN1  
@@ -398,7 +398,7 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE_1                00014000    000039AA =       14762. bytes (REL,CON)
+_CODE_1                00014000    000039B3 =       14771. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
@@ -410,49 +410,49 @@ _CODE_1                00014000    000039AA =       14762. bytes (REL,CON)
      0001437C  _building |    000143BC  _get_tool |    00014426  _get_eras
      0001461A  _get_buil |    00014666  _get_max_ |    000146D2  _update_b
      00014904  _refresh_ |    00014BD4  _add_buil |    00014C44  _remove_b
-     00014D43  _rebuild_ |    00015031  _get_sub_ |    00015040  _reset_su
-     00015045  _update_s |    00015474  _sub_tool |    0001548C  _is_area_
-     00015509  _plot_bui |    000155B1  _update_g |    00015A26  _update_s
-     00015A2E  _draw_hud |    00015BFE  _update_h |    00015D6D  _move_lim
-     00015DB6  _logo_scr |    00016032  _story_di |    0001633D  _move_cur
-     0001679E  _force_cu |    000167BB  _trigger_ |    0001687E  _trigger_
-     00016934  _setup_st |    00016A1D  _update_r |    00016C89  _cars_ini
-     00016CDF  _cars_upd |    000170C1  _tram_ini |    0001710E  _tram_upd
-     000176A4  _boat_ini |    000176C8  _boat_upd
+     00014D43  _rebuild_ |    0001503A  _get_sub_ |    00015049  _reset_su
+     0001504E  _update_s |    0001547D  _sub_tool |    00015495  _is_area_
+     00015512  _plot_bui |    000155BA  _update_g |    00015A2F  _update_s
+     00015A37  _draw_hud |    00015C07  _update_h |    00015D76  _move_lim
+     00015DBF  _logo_scr |    0001603B  _story_di |    00016346  _move_cur
+     000167A7  _force_cu |    000167C4  _trigger_ |    00016887  _trigger_
+     0001693D  _setup_st |    00016A26  _update_r |    00016C92  _cars_ini
+     00016CE8  _cars_upd |    000170CA  _tram_ini |    00017117  _tram_upd
+     000176AD  _boat_ini |    000176D1  _boat_upd
 ASxxxx Linker V03.00/V05.40 + sdld,  page 30.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE_3                00034000    000031F1 =       12785. bytes (REL,CON)
+_CODE_3                00034000    000030D5 =       12501. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     000341FD  _find_bui |    00034EB4  _show_upg |    000350CE  _show_bui
-     00035212  _tile_dat |    00035412  _cursor_d |    00035462  _menu_ico
-     000354E2  _shop     |    000355E2  _icon01   |    00035622  _limousin
-     000357D2  _specialC |    00035842  _fleche   |    00035852  _penultim
-     00035932  _titleEl  |    00035972  _titlePre |    00035A92  _basicCom
-     00035AD2  _iconBuil |    00035B12  _iconRes  |    00035B52  _iconGov 
-     00035B92  _iconMine |    00035BD2  _iconEner |    00035C12  _iconCatR
-     00035C52  _iconSubR |    00035C92  _iconSubD |    00035CD2  _farmish 
-     00035D62  _plantati |    00035DA2  _iconSubH |    00035DE2  _iconSubS
-     00035E22  _iconSubF |    00035E62  _iconSubF |    00035EA2  _iconSubP
-     00035EE2  _iconSubW |    00035F22  _sawmill  |    00036022  _police  
-     00036062  _iconSubP |    000360A2  _church   |    00036132  _iconSubC
-     00036172  _hospital |    00036272  _iconSubH |    000362B2  _iconSubS
-     000362F2  _power    |    000363F2  _mine     |    000364F2  _iconSubM
-     00036532  _iconCatL |    00036572  _iconSubB |    000365B2  _iconSubM
-     000365F2  _iconSubU |    00036632  _mediaDis |    000366C2  _baraque 
-     00036702  _road_x6  |    00036762  _road_int |    00036792  _dollar  
-     000367A2  _date_til |    00036852  _hud_extr |    00036892  _cursor_t
-     000368A2  _flash    |    000368B2  _car_tile |    000368C2  _car_tile
-     000368D2  _car_tile |    000368E2  _car_tile |    000368F2  _water   
-     00036952  _charb    |    00036962  _port     |    000369A2  _iconSubP
-     000369E2  _oneTileH |    000369F2  _iconSubO |    00036A32  _tram    
-     00036A72  _boat     |    00036AB2  _boatBack |    00036AF2  _interrog
-     00036B02  _troisCot |    00036B32  _plane_lo |    00036C39  _plane_in
-     00036C51  _plane_up |    00036ED9  _water_an
+     000341FD  _find_bui |    00034D98  _show_upg |    00034FB2  _show_bui
+     000350F6  _tile_dat |    000352F6  _cursor_d |    00035346  _menu_ico
+     000353C6  _shop     |    000354C6  _icon01   |    00035506  _limousin
+     000356B6  _specialC |    00035726  _fleche   |    00035736  _penultim
+     00035816  _titleEl  |    00035856  _titlePre |    00035976  _basicCom
+     000359B6  _iconBuil |    000359F6  _iconRes  |    00035A36  _iconGov 
+     00035A76  _iconMine |    00035AB6  _iconEner |    00035AF6  _iconCatR
+     00035B36  _iconSubR |    00035B76  _iconSubD |    00035BB6  _farmish 
+     00035C46  _plantati |    00035C86  _iconSubH |    00035CC6  _iconSubS
+     00035D06  _iconSubF |    00035D46  _iconSubF |    00035D86  _iconSubP
+     00035DC6  _iconSubW |    00035E06  _sawmill  |    00035F06  _police  
+     00035F46  _iconSubP |    00035F86  _church   |    00036016  _iconSubC
+     00036056  _hospital |    00036156  _iconSubH |    00036196  _iconSubS
+     000361D6  _power    |    000362D6  _mine     |    000363D6  _iconSubM
+     00036416  _iconCatL |    00036456  _iconSubB |    00036496  _iconSubM
+     000364D6  _iconSubU |    00036516  _mediaDis |    000365A6  _baraque 
+     000365E6  _road_x6  |    00036646  _road_int |    00036676  _dollar  
+     00036686  _date_til |    00036736  _hud_extr |    00036776  _cursor_t
+     00036786  _flash    |    00036796  _car_tile |    000367A6  _car_tile
+     000367B6  _car_tile |    000367C6  _car_tile |    000367D6  _water   
+     00036836  _charb    |    00036846  _port     |    00036886  _iconSubP
+     000368C6  _oneTileH |    000368D6  _iconSubO |    00036916  _tram    
+     00036956  _boat     |    00036996  _boatBack |    000369D6  _interrog
+     000369E6  _troisCot |    00036A16  _plane_lo |    00036B1D  _plane_in
+     00036B35  _plane_up |    00036DBD  _water_an
 ASxxxx Linker V03.00/V05.40 + sdld,  page 31.
 Hexadecimal  [32-Bits]
 

@@ -372,12 +372,25 @@ void rebuild_registry_from_map(void) {
                 break;
             case TILE_ONETILEHOME:
                 // Seulement enregistrer le coin NW (les 4 tiles sont identiques)
+                // Scan ordonné gauche->droite, haut->bas :
+                // i est NW si carré 2x2 complet ET (i-1) ET (i-64) ne sont pas déjà
+                // enregistrés comme NW d'une baraque (évite de recompter NE/SW/SE)
                 { uint8_t ox = i % 64, oy = i / 64;
-                  if ((ox == 0 || ram_map[i-1] != TILE_ONETILEHOME) &&
-                      (oy == 0 || ram_map[i-64] != TILE_ONETILEHOME) &&
-                      ox < 63 && oy < 63 &&
-                      ram_map[i+1] == TILE_ONETILEHOME && ram_map[i+64] == TILE_ONETILEHOME) {
-                      if (building_count < MAX_BUILDINGS) {
+                  if (ox < 63 && oy < 63 &&
+                      ram_map[i+1]  == TILE_ONETILEHOME &&
+                      ram_map[i+64] == TILE_ONETILEHOME &&
+                      ram_map[i+65] == TILE_ONETILEHOME) {
+                      // Vérifier que i n'est pas déjà couvert par une baraque enregistrée
+                      uint8_t already = 0;
+                      uint8_t k;
+                      for (k = 0; k < building_count; k++) {
+                          if (building_registry[k].type != TILE_ONETILEHOME) continue;
+                          uint16_t nw = building_registry[k].map_idx;
+                          uint8_t bx = (uint8_t)(nw % 64);
+                          uint8_t by = (uint8_t)(nw / 64);
+                          if (ox >= bx && ox <= bx+1 && oy >= by && oy <= by+1) { already = 1; break; }
+                      }
+                      if (!already && building_count < MAX_BUILDINGS) {
                           BuildingInstance *b = &building_registry[building_count];
                           b->map_idx      = i;
                           b->type         = TILE_ONETILEHOME;

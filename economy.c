@@ -285,12 +285,14 @@ uint8_t find_building_at_cursor(void) {
     uint8_t  i;
 
     if (t == TILE_ONETILEHOME) {
-        uint8_t rx = curs_x, ry = curs_y;
-        if (rx > 0 && ram_map[(uint16_t)ry * 64 + rx - 1] == TILE_ONETILEHOME) rx--;
-        if (ry > 0 && ram_map[(uint16_t)(ry - 1) * 64 + curs_x] == TILE_ONETILEHOME) ry--;
-        uint16_t nw = (uint16_t)ry * 64 + rx;
-        for (i = 0; i < building_count; i++)
-            if (building_registry[i].map_idx == nw) return i;
+        // Cherche la baraque dont le coin NW couvre la position curseur (2x2)
+        for (i = 0; i < building_count; i++) {
+            if (building_registry[i].type != TILE_ONETILEHOME) continue;
+            uint8_t bx = (uint8_t)(building_registry[i].map_idx % 64);
+            uint8_t by = (uint8_t)(building_registry[i].map_idx / 64);
+            if (curs_x >= bx && curs_x <= bx + 1 &&
+                curs_y >= by && curs_y <= by + 1) return i;
+        }
         return 0xFF;
     }
     if      (t >= TILE_FARM_NW       && t <= TILE_FARM_NW + 8)  { base = TILE_FARM_NW;       sz = 3; }
