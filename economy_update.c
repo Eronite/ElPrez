@@ -416,9 +416,10 @@ void update_economy(void) {
     // Pénalité homeless sur bonheur (avant calcul avg_happiness)
     game.homeless = (game.population > housing_cap) ? game.population - housing_cap : 0;
     int16_t homeless_pen = 0;
-    if (game.homeless > 0) {
-        homeless_pen = (int16_t)(game.homeless * 2);
-        if (homeless_pen > 20) homeless_pen = 20;
+    if (game.homeless > 0 && game.population > 0) {
+        int16_t homeless_rate = (int16_t)(((uint32_t)game.homeless * 100) / game.population);
+        homeless_pen = (int16_t)(homeless_rate * 40 / 100);
+        if (homeless_pen > 40) homeless_pen = 40;
         hap_d -= homeless_pen;
     }
 
@@ -494,6 +495,11 @@ void update_economy(void) {
         if (pop_delta == 0 && hap_offset < 0) pop_delta = -1;
         if (hap_offset == 0 && game.population >= 80) pop_delta = 0;
         int16_t max_delta = (int16_t)(game.population / 20 + 1);
+        if (game.homeless > 0 && game.population > 0) {
+            uint8_t homeless_pct = (uint8_t)(((uint32_t)game.homeless * 100) / game.population);
+            if (homeless_pct >= 40 && pop_delta > 0) pop_delta = 0;
+            else if (homeless_pct >= 20 && pop_delta > 0) pop_delta = pop_delta / 2;
+        }
         if (pop_delta >  max_delta) pop_delta =  max_delta;
         if (pop_delta < -max_delta) pop_delta = -max_delta;
         int32_t new_pop = (int32_t)game.population + pop_delta;

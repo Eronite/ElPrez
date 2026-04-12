@@ -107,6 +107,7 @@ void init_game_variables() {
     game.rev_culture = 0;
     game.rev_rents = 0;
     game.homeless = 0;
+    game.homeless_warned = 0;
     game.total_jobs = 0;
     game.total_unemployed = 0;
     building_count = 0;

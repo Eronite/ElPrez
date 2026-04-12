@@ -120,7 +120,11 @@ while (menu_running) {
         else if (stats_page == 3) { // --- PAGE 4 : MISSIONS ---
             restore_shop_tiles(); // recharge cursor_data en tile sprite 0 (écrasée par fleche)
             draw_text(6, 1, GET_TEXT(TXT_STATS_MISSION), 1);
-            if (game.game_mode == MODE_STORY) {
+            if (game.game_mode == MODE_STORY && game.mission_id >= 4) {
+                draw_text(3, 4, "Toutes les", 1);
+                draw_text(3, 6, "missions", 1);
+                draw_text(3, 8, "accomplies!", 1);
+            } else if (game.game_mode == MODE_STORY) {
                 MissionStep cur;
                 nb_story_get_current_step_b2(&cur);
                 draw_text(3, 2, GET_TEXT(TXT_STATS_CURRENT_GOAL), 1);
@@ -318,8 +322,15 @@ while (menu_running) {
             draw_number(15, 7, game.exp_salaries, 1);
             draw_text(1, 9, "construction :", 1);
             draw_number(15, 9, game.exp_construction, 1);
-            draw_text(1, 11, "total :", 1);
-            draw_number(15, 11, (uint16_t)game.monthly_expenses, 1);
+            if (game.decree_tram) {
+                draw_text(1, 11, "tram :", 1);
+                draw_number(15, 11, 1000, 1);
+                draw_text(1, 13, "total :", 1);
+                draw_number(15, 13, (uint16_t)game.monthly_expenses, 1);
+            } else {
+                draw_text(1, 11, "total :", 1);
+                draw_number(15, 11, (uint16_t)game.monthly_expenses, 1);
+            }
         }
 
         else if (stats_page == 8) { // --- PAGE 9 : FACTEURS BONHEUR 1 ---

@@ -10,11 +10,11 @@
 // ============================================================
 char *mission_strings_fr[] = {
     // MTXT_M1_1
-    "Presidente, notre ancienne\nile a d| prendre sa retraite\nsuite a un l~ger d~saccord\ng~ologique.\nMais r~jouissez-vous ! Le\ng~n~reux Ronald Dump nous a\noffert ce lopin de terre.\nIl dit que la personne ~\nlaquelle elle appartenait\nn'en a plus besoin.\nVos objectifs :\n- 1 ferme\n- 6000 pesos\n- 30 habitants",
+    "Presidente, notre ancienne\nile a d| prendre sa retraite\nsuite a un l~ger d~saccord\ng~ologique.\nMais r~jouissez-vous ! Le\ng~n~reux Ronald Dump nous a\noffert ce lopin de terre.\nIl dit que la personne ~\nlaquelle elle appartenait\nn'en a plus besoin.\nVos objectifs :\n- 3 fermes\n- 6000 pesos\n- 25 habitants",
     // MTXT_M1_2
     "Magnifique, Presidente !\nVous avez prouv~ que la\ncivilisation est possible...\nm~me ici.\nViva el Presidente !",
     // MGOAL_M1_1
-    "Ferme + 6000$ + 30 hab",
+    "3 fermes + 6000$ + 25 hab",
     // MGOAL_M1_2
     "Mission 1 termin~e !",
 
@@ -51,11 +51,11 @@ char *mission_strings_fr[] = {
 // ============================================================
 char *mission_strings_en[] = {
     // MTXT_M1_1
-    "Presidente, our old island\nhas retired due to a minor\ngeological disagreement.\nBut rejoice! The generous\nRonald Dump has gifted us\nthis patch of dirt.\nHe says the previous owner\nno longer needs it.\nYour objectives:\n- 1 farm\n- 6000 pesos\n- 30 inhabitants",
+    "Presidente, our old island\nhas retired due to a minor\ngeological disagreement.\nBut rejoice! The generous\nRonald Dump has gifted us\nthis patch of dirt.\nHe says the previous owner\nno longer needs it.\nYour objectives:\n- 3 farms\n- 6000 pesos\n- 25 inhabitants",
     // MTXT_M1_2
     "Magnificent, Presidente!\nYou have proven that\ncivilization is possible...\neven here.\nViva el Presidente!",
     // MGOAL_M1_1
-    "Farm + 6000$ + 30 inhab",
+    "3 farms + 6000$ + 25 inhab",
     // MGOAL_M1_2
     "Mission 1 complete!",
 
@@ -97,7 +97,7 @@ char *mission_strings_en[] = {
 // ============================================================
 
 MissionStep mission1[] = {
-    {MTXT_M1_1, PORTRAIT_PENULTIMO, MGOAL_M1_1, 6000, 30, 0, 0, 0, 0, 0, TILE_FARM_NW, 1, 0, 0},
+    {MTXT_M1_1, PORTRAIT_PENULTIMO, MGOAL_M1_1, 6000, 25, 0, 0, 0, 0, 0, TILE_FARM_NW, 3, 0, 0},
     {MTXT_M1_2, PORTRAIT_PENULTIMO, MGOAL_M1_2,    0,  0, 0, 0, 0, 0, 0, 0,            0, 0, 0},
 };
 

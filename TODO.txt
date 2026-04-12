@@ -41,6 +41,13 @@ implémnter economie : AAAaclean169\progression_economie_todo.md
 
 mettre cadre sur la description d'amelioration
 
+****************
+******************
+*******************
+verifier (à partir d'une new game) que le decree transports ne s'active pas "tout seul"
+****************
+******************
+*******************
 
 quand un objectif est validé, on ne doit pas pouvoir le dévalider (mission 1, on arrive à 6000 ça valide, mais si on dépense et tombe en dessous de 6000, ça invalide, on ne veut pas ça)
 *********************************************************************************************
@@ -48,11 +55,29 @@ quand un objectif est validé, on ne doit pas pouvoir le dévalider (mission 1, 
 ***************************************************************************************************************
 
 quand un objectif de mission est atteint, on doit avoir un dialogue de penultimo (il y en avait avant la refacto, ils sont encore dans le code ?)
-*****************************************************************************************************************************
+**************************************************************************************z***************************************
 *
 voir si economy.c en bank 3 est encore appelé qq part ou bien dead code
 
-bug des onetilehome qui n'affichent pas le menu infos / ameliorations quand on clique sur les 2 tile sde gauche de la onetilehome, dans le cas où il y a plusieurs onetilehome collées horizontalement
+
+message en cas de trop de sans abri, calqué sur la logique du message de famine : déjà fait, mais il faut ajouter le symbole % (replique : "caniveau")
+
+quand on améliore, on change les tiles ? pour la ferme il faut 2 tiles
+
+amélioration sur las onetilehome, qui double ou triple leur capacité
+upgrade : fonctionnement : les conserveries servent aussi en partie à nourrir les habitants (mais du coup moins revenus)
+
+à partir d'un certain nombre de bâtiments, ils ne sont plus save dans le registre ?
+
+le bonheur ne doit pas pouvoir dépasser 70 si on a trop de sans abris (il doit tendre vers 70 quand trop de sans abris et bonheur supérieur à 70)
+
+voir comment faire pour moins de ralentissement / freeze quand on pose un batiment et quand on change de mois
+
+*********************************************************************************************************************************
+il y a toujours un probleme avec les depenses, sur la page des dépenses, on a les slaires et et maintenance, et le total est beaucoup plus élevé (ce qui n'atait pas le cas le 11/04, mais je ne sais pas d'où ça vient sur GitHub) ==> vient du decree transports publics qui est activé alors qu'i ne devrait pas ??????
+*************************************************************************************************************************
+expliquer l'equilibrage au joueur en mode story : préciser qu'il faut utiliser le salaire dans le menu infos, pour rééquilibrer les salariés (typiquement, si famine, payer mieux les employés des fermes, et les postes vont se remplir, et les habitants auront à manger)
+********************************************************************************************************************************
 
 "que demander de plus" dans un texte de penultimo : suivi d'une tile random
 hépital dans les textes de mission 3

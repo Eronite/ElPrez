@@ -654,9 +654,6 @@ void update_game_logic() { // ici les count_buildings sont ok
         // economy.c est en bank 3 ; appel via wrapper nonbanked (bank 0)
         call_update_economy();
 
-        game.homeless = (game.population > game.housing_capacity)
-                        ? (game.population - game.housing_capacity) : 0;
-
         // --- BILAN ALIMENTAIRE ---
         uint8_t prev_famine = game.is_in_famine;
         if (game.foodProduction >= game.foodConsumption) {
@@ -695,6 +692,29 @@ void update_game_logic() { // ici les count_buildings sont ok
             restore_map_tiles();
             move_win(7, 136);
             update_hud();
+        }
+
+        // Popup sans-abris : uniquement à la transition sous le seuil de 40%
+        if (game.population > 0) {
+            uint8_t homeless_pct = (uint8_t)(((uint32_t)game.homeless * 100) / game.population);
+            if (homeless_pct >= 40 && !game.homeless_warned) {
+                game.homeless_warned = 1;
+                move_sprite(35u, 0u, 0u); move_sprite(36u, 0u, 0u); move_sprite(37u, 0u, 0u);
+                move_sprite(38u, 0u, 0u); move_sprite(39u, 0u, 0u);
+                load_lowercase_font();
+                if (game.language == LANG_EN) {
+                    story_dialogue_animated(0, "Presidente! Polls show 40% of your citizens are sleeping under the stars. Rest assured, fresh air is excellent for morale! We call it the Open-Sky Housing Program.\nViva el Presidente!");
+                } else {
+                    story_dialogue_animated(0, "Presidente ! Vos sondages indiquent que 40% de vos citoyens contemplent les ~toiles... depuis le caniveau. L'air frais est excellent pour le moral ! Nous appelons ~a le Programme de Logement ~ Ciel Ouvert.\nViva el Presidente !");
+                }
+                move_win(7, 144);
+                clear_entire_window();
+                restore_map_tiles();
+                move_win(7, 136);
+                update_hud();
+            } else if (homeless_pct < 40) {
+                game.homeless_warned = 0;
+            }
         }
 
 // chômage calculé dans update_economy()
