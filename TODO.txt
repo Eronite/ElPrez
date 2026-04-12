@@ -76,6 +76,8 @@ voir comment faire pour moins de ralentissement / freeze quand on pose un batime
 ajouter pollution dans le menu, et remettre la food commentée
 
 ne pas faire pop up la famine ou les sans abris dans les 6 premiers mois en free play ? story ?
+
+la ligne A : activ / desactiv , dans le menu des décrets, ne doit pas être redessinée quand on change de page
 *********************************************************************************************************************************
 il y a toujours un probleme avec les depenses, sur la page des dépenses, on a les slaires et et maintenance, et le total est beaucoup plus élevé (ce qui n'atait pas le cas le 11/04, mais je ne sais pas d'où ça vient sur GitHub) ==> vient du decree transports publics qui est activé alors qu'i ne devrait pas ??????
 *************************************************************************************************************************

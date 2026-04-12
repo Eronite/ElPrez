@@ -358,6 +358,26 @@ uint8_t update_economy_tick(void) {
                     }
                     break;
                 }
+                case TILE_WOOD_NW: {
+                    uint8_t wj = bldg_jobs(TILE_WOOD_NW);
+                    if (wj > 0) {
+                        if (f & BLDG_UPG2_APPLIED) {
+                            // Conso. locale : nourrit les habitants, pas de revenus
+                            s_food_p += (uint16_t)((uint32_t)40 * b->occupants / wj);
+                        } else if (f & BLDG_UPG1_APPLIED) {
+                            // Prod. locale : revenus augmentés
+                            uint16_t rev = (uint16_t)((uint32_t)50 * b->occupants / wj);
+                            game.monthly_revenue += rev;
+                            game.rev_food += rev;
+                        } else {
+                            // Base : revenus standards
+                            uint16_t rev = (uint16_t)((uint32_t)30 * b->occupants / wj);
+                            game.monthly_revenue += rev;
+                            game.rev_food += rev;
+                        }
+                    }
+                    break;
+                }
                 default: break;
             }
         }

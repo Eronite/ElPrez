@@ -314,6 +314,23 @@ void update_economy(void) {
                 }
                 break;
             }
+            case TILE_WOOD_NW: {
+                uint8_t wj = bldg_jobs(TILE_WOOD_NW);
+                if (wj > 0) {
+                    if (f & BLDG_UPG2_APPLIED) {
+                        food_p += (uint16_t)((uint32_t)40 * b->occupants / wj);
+                    } else if (f & BLDG_UPG1_APPLIED) {
+                        uint16_t rev = (uint16_t)((uint32_t)50 * b->occupants / wj);
+                        game.monthly_revenue += rev;
+                        game.rev_food += rev;
+                    } else {
+                        uint16_t rev = (uint16_t)((uint32_t)30 * b->occupants / wj);
+                        game.monthly_revenue += rev;
+                        game.rev_food += rev;
+                    }
+                }
+                break;
+            }
             case TILE_CHURCH_NW: {
                 uint8_t cj = bldg_jobs(TILE_CHURCH_NW);
                 if (cj > 0) hap_d += (int16_t)(15 * b->occupants / cj);

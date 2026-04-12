@@ -357,7 +357,7 @@ static const char* upg_name(uint8_t type, uint8_t slot) {
         switch(type) {
             case TILE_FARM_NW:       return "IRRIGATION";
             case TILE_PLANTATION_NW: return "MONOCULTURE";
-            case TILE_WOOD_NW:       return "PROD.INDUS";
+            case TILE_WOOD_NW:       return "PROD.LOCALE";
             case TILE_MINE_NW:       return "DYNAMITAGE";
             case TYPE_FACTORY_NW:    return "AUTOMATION";
             case TYPE_MALL_NW:       return "PUBLICITE";
@@ -376,7 +376,7 @@ static const char* upg_name(uint8_t type, uint8_t slot) {
         switch(type) {
             case TILE_FARM_NW:       return "AGRI.BIO";
             case TILE_PLANTATION_NW: return "COM.EQUIT.";
-            case TILE_WOOD_NW:       return "QUAL.PREM.";
+            case TILE_WOOD_NW:       return "CONSO.LOCALE";
             case TILE_MINE_NW:       return "SECURITE";
             case TYPE_FACTORY_NW:    return "ECOLOGIE";
             case TYPE_MALL_NW:       return "PROD.LOCAL";
