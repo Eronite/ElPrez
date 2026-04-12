@@ -118,12 +118,23 @@ static uint16_t s_total_edu, s_num_houses, s_housing_cap;
 static uint16_t s_total_jobs, s_workers_assigned;
 static uint8_t  s_power_ok;
 
+// Grille de zones 8x8 pour lookup O(1) des services à proximité
+#define ZONE_HAS_SCHOOL    0x01
+#define ZONE_HAS_HOSPITAL  0x02
+#define ZONE_HAS_POLICE    0x04
+#define ZONE_HAS_BAR       0x08
+#define ZONE_HAS_WORK      0x10
+#define ZONE_HAS_POLLUTION 0x20
+static uint8_t zone_service_flags[64]; // 64 bytes WRAM
+static uint8_t s_zone_edu[64];         // contribution éducation par zone
+static uint8_t s_zone_health[64];      // contribution santé par zone
+
 void update_economy_start(void) {
     econ_step = 1;
 }
 
 uint8_t update_economy_tick(void) {
-    uint8_t ri, si;
+    uint8_t ri;
 
     if (econ_step == 0) return 1;
 
@@ -210,6 +221,60 @@ uint8_t update_economy_tick(void) {
         s_hap_d = 0; s_health_d = 0; s_crime_d = 0;
         s_total_edu = 0; s_num_houses = 0; s_housing_cap = 0;
 
+        // Remplissage grille de zones de service (O(N))
+        {
+            uint8_t zi2;
+            for (zi2 = 0; zi2 < 64; zi2++) { zone_service_flags[zi2] = 0; s_zone_edu[zi2] = 0; s_zone_health[zi2] = 0; }
+        }
+        for (ri = 0; ri < building_count; ri++) {
+            BuildingInstance *b = &building_registry[ri];
+            if (!(b->flags & BLDG_FLAG_HAS_ROAD)) continue;
+            uint8_t t = b->type;
+            uint8_t bx = (uint8_t)(b->map_idx & 63);
+            uint8_t by = (uint8_t)(b->map_idx >> 6);
+            uint8_t zx = bx >> 3;
+            uint8_t zy = by >> 3;
+            uint8_t zflag = 0;
+            uint8_t delta = 1;
+            uint8_t edu_val = 0, health_val = 0;
+            uint8_t active = (b->occupants > 0);
+            if (active && t == TILE_SCHOOL_NW) {
+                zflag = ZONE_HAS_SCHOOL;
+                uint8_t sjobs = bldg_jobs(TILE_SCHOOL_NW);
+                uint8_t edu_base = (b->flags & BLDG_UPG1_APPLIED) ? 15 : 10;
+                edu_val = (sjobs > 0) ? (edu_base * b->occupants / sjobs) : 0;
+            } else if (active && t == TILE_HOSPITAL_NW) {
+                zflag = ZONE_HAS_HOSPITAL;
+                uint8_t hjobs = bldg_jobs(TILE_HOSPITAL_NW);
+                health_val = (hjobs > 0) ? (10 * b->occupants / hjobs) : 0;
+            } else if (active && t == TILE_POLICE_NW) {
+                zflag = ZONE_HAS_POLICE;
+            } else if (active && t == TILE_BAR_NW) {
+                zflag = ZONE_HAS_BAR;
+            } else if (active && (t == TILE_FARM_NW || t == TILE_PLANTATION_NW || t == TYPE_FACTORY_NW || t == TILE_MINE_NW || t == TILE_WOOD_NW || t == TYPE_MALL_NW)) {
+                zflag = ZONE_HAS_WORK;
+                delta = 2;
+            } else if (t == TILE_MINE_NW || t == TILE_POWER_NW) {
+                zflag = ZONE_HAS_POLLUTION;
+            }
+            if (zflag == 0) continue;
+            {
+                uint8_t z0x = (zx >= delta) ? zx - delta : 0;
+                uint8_t z1x = (zx + delta < 8) ? zx + delta : 7;
+                uint8_t z0y = (zy >= delta) ? zy - delta : 0;
+                uint8_t z1y = (zy + delta < 8) ? zy + delta : 7;
+                uint8_t dzy, dzx;
+                for (dzy = z0y; dzy <= z1y; dzy++) {
+                    for (dzx = z0x; dzx <= z1x; dzx++) {
+                        uint8_t zi = dzy * 8 + dzx;
+                        zone_service_flags[zi] |= zflag;
+                        if (edu_val > s_zone_edu[zi]) s_zone_edu[zi] = edu_val;
+                        if (health_val > s_zone_health[zi]) s_zone_health[zi] = health_val;
+                    }
+                }
+            }
+        }
+
         econ_step = 2;
         return 0;
     }
@@ -250,35 +315,19 @@ uint8_t update_economy_tick(void) {
                 }
                 case TILE_HOUSE_NW: {
                     s_num_houses++;
-                    uint8_t h_x = b->map_idx % 64; uint8_t h_y = b->map_idx / 64;
-                    uint8_t has_school = 0, has_health = 0, has_police = 0, has_bar = 0, has_work = 0, has_pollution = 0;
-                    for (si = 0; si < building_count; si++) {
-                        BuildingInstance *s = &building_registry[si];
-                        uint8_t s_t = s->type;
-                        uint16_t dist = abs(h_x - (s->map_idx % 64)) + abs(h_y - (s->map_idx / 64));
-                        if (s->flags & BLDG_FLAG_HAS_ROAD) {
-                            if (!has_school && s_t == TILE_SCHOOL_NW && dist < SCHOOL_RADIUS && s->occupants > 0) {
-                                has_school = 1;
-                                uint8_t sjobs = bldg_jobs(TILE_SCHOOL_NW);
-                                uint8_t edu_base = (s->flags & BLDG_UPG1_APPLIED) ? 15 : 10;
-                                s_total_edu += (sjobs > 0) ? (edu_base * s->occupants / sjobs) : 0;
-                            }
-                            if (!has_health && s_t == TILE_HOSPITAL_NW && dist < HOSPITAL_RADIUS && s->occupants > 0) {
-                                has_health = 1;
-                                uint8_t hjobs = bldg_jobs(TILE_HOSPITAL_NW);
-                                s_health_d += (hjobs > 0) ? (int16_t)(10 * s->occupants / hjobs) : 0;
-                            }
-                            if (!has_police && s_t == TILE_POLICE_NW && dist < POLICE_RADIUS && s->occupants > 0) {
-                                has_police = 1;
-                                s_crime_d -= 2;
-                            }
-                            if (!has_bar  && s_t == TILE_BAR_NW && dist < BAR_RADIUS && s->occupants > 0) has_bar  = 1;
-                            if (!has_work && (s_t == TILE_FARM_NW || s_t == TILE_PLANTATION_NW || s_t == TYPE_FACTORY_NW || s_t == TILE_MINE_NW || s_t == TILE_WOOD_NW || s_t == TYPE_MALL_NW) && dist < WORK_RADIUS && s->occupants > 0) has_work = 1;
-                        }
-                        if (!has_pollution && (s_t == TILE_MINE_NW || s_t == TILE_POWER_NW) && dist < POLLUTION_RADIUS)
-                            has_pollution = 1;
-                        if (has_school && has_health && has_police && has_bar && has_work && has_pollution) break;
-                    }
+                    uint8_t h_x = (uint8_t)(b->map_idx & 63);
+                    uint8_t h_y = (uint8_t)(b->map_idx >> 6);
+                    uint8_t zi = (uint8_t)((h_y >> 3) * 8 + (h_x >> 3));
+                    uint8_t zf = zone_service_flags[zi];
+                    uint8_t has_school    = (zf & ZONE_HAS_SCHOOL)    ? 1 : 0;
+                    uint8_t has_health    = (zf & ZONE_HAS_HOSPITAL)  ? 1 : 0;
+                    uint8_t has_police    = (zf & ZONE_HAS_POLICE)    ? 1 : 0;
+                    uint8_t has_bar       = (zf & ZONE_HAS_BAR)       ? 1 : 0;
+                    uint8_t has_work      = (zf & ZONE_HAS_WORK)      ? 1 : 0;
+                    uint8_t has_pollution = (zf & ZONE_HAS_POLLUTION) ? 1 : 0;
+                    if (has_school) s_total_edu += s_zone_edu[zi];
+                    if (has_health) s_health_d  += (int16_t)s_zone_health[zi];
+                    if (has_police) s_crime_d   -= 2;
                     uint8_t amenity_count = has_health + has_police + has_bar + has_work + has_school;
                     b->occupants = amenity_count + 1;
                     if (b->occupants > b->max_capacity) b->occupants = b->max_capacity;
