@@ -58,6 +58,7 @@ typedef struct {
     int8_t  decree_tram_hap_bonus; // bonus cumulé décret tram (0..+5)
     uint8_t mission_id;            // 0=mission1, 1=mission2, 2=mission3, 3=mission4
     uint8_t homeless_warned;
+    uint8_t decree_housing;        // 1 = actif : réduit sans-abris, -1500/mois
     uint8_t signature;
 } GameState;
 

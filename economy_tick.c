@@ -416,7 +416,8 @@ uint8_t update_economy_tick(void) {
         game.culture_stock += s_culture_p;
         game.ore_stock     += s_ore_p;
 
-        if (game.decree_tram) game.monthly_expenses += 1000;
+        if (game.decree_tram)    game.monthly_expenses += 1000;
+        if (game.decree_housing) game.monthly_expenses += 1500;
         game.money += (int32_t)game.monthly_revenue - (int32_t)game.monthly_expenses;
 
         game.foodProduction   = s_food_p;
@@ -433,6 +434,10 @@ uint8_t update_economy_tick(void) {
         }
 
         game.homeless = (game.population > s_housing_cap) ? game.population - s_housing_cap : 0;
+        if (game.decree_housing && game.homeless > 0) {
+            uint16_t reduction = game.population / 5; // -20% de la population
+            game.homeless = (game.homeless > reduction) ? game.homeless - reduction : 0;
+        }
         int16_t homeless_pen = 0;
         if (game.homeless > 0 && game.population > 0) {
             int16_t homeless_rate = (int16_t)(((uint32_t)game.homeless * 100) / game.population);
