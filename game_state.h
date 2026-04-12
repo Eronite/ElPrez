@@ -91,7 +91,7 @@ typedef struct {
     uint8_t  max_capacity; // capacité max
 } BuildingInstance;        // 6 bytes par entrée
 
-#define MAX_BUILDINGS 128  // 128 * 6 = 768 bytes WRAM
+#define MAX_BUILDINGS 255  // 255 * 6 = 1530 bytes WRAM
 
 extern BuildingInstance building_registry[MAX_BUILDINGS];
 extern uint8_t building_salary[MAX_BUILDINGS];  // salaire par bâtiment (0-10)

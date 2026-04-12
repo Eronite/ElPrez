@@ -15,8 +15,14 @@
 // Calcul mensuel de l'économie (ressources, emplois, bonheur, criminalité…)
 void update_economy(void);
 
+// Calcul étalé sur plusieurs frames
+void update_economy_start(void);
+uint8_t update_economy_tick(void);
+
 // Wrappers nonbanked (bank 0) pour appels depuis economy.c (bank 3) vers bank 1
 void call_update_economy(void);
+void call_update_economy_start(void);
+void call_update_economy_tick(void);
 void nb_play_sound_build(void);
 void nb_play_sound_error(void);
 void nb_update_hud_b3(void);

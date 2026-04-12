@@ -8,7 +8,7 @@ ROMUSAGE = bin\romusage
 CFLAGS = -Wl-m -Wl-yt0x1B -Wl-ya4 -Wl-yo16
 
 # --- OBJETS ---
-OBJS = main.o game_state.o graphics.o audio.o logic.o economy.o economy_update.o assets.o save.o menus.o missions.o lang.o intro.o minimap.o story_mode.o map_mission1_water.o boat.o menu_assets.o decrets.o stats_screen.o plane.o
+OBJS = main.o game_state.o graphics.o audio.o logic.o economy.o economy_update.o economy_tick.o assets.o save.o menus.o missions.o lang.o intro.o minimap.o story_mode.o map_mission1_water.o boat.o menu_assets.o decrets.o stats_screen.o plane.o
 
 all: test.gb
 

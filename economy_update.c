@@ -251,39 +251,35 @@ void update_economy(void) {
             case TILE_HOUSE_NW: {
                 num_houses++;
                 uint8_t h_x = b->map_idx % 64; uint8_t h_y = b->map_idx / 64;
-                uint8_t has_school = 0, has_health = 0, has_police = 0, has_bar = 0, has_work = 0;
+                uint8_t has_school = 0, has_health = 0, has_police = 0, has_bar = 0, has_work = 0, has_pollution = 0;
                 for (si = 0; si < building_count; si++) {
                     BuildingInstance *s = &building_registry[si];
-                    if (!(s->flags & BLDG_FLAG_HAS_ROAD)) continue;
                     uint8_t s_t = s->type;
                     uint16_t dist = abs(h_x - (s->map_idx % 64)) + abs(h_y - (s->map_idx / 64));
-                    if (!has_school && s_t == TILE_SCHOOL_NW && dist < SCHOOL_RADIUS && s->occupants > 0) {
-                        has_school = 1;
-                        uint8_t sjobs = bldg_jobs(TILE_SCHOOL_NW);
-                        uint8_t edu_base = (s->flags & BLDG_UPG1_APPLIED) ? 15 : 10;
-                        total_edu += (sjobs > 0) ? (edu_base * s->occupants / sjobs) : 0;
+                    if (s->flags & BLDG_FLAG_HAS_ROAD) {
+                        if (!has_school && s_t == TILE_SCHOOL_NW && dist < SCHOOL_RADIUS && s->occupants > 0) {
+                            has_school = 1;
+                            uint8_t sjobs = bldg_jobs(TILE_SCHOOL_NW);
+                            uint8_t edu_base = (s->flags & BLDG_UPG1_APPLIED) ? 15 : 10;
+                            total_edu += (sjobs > 0) ? (edu_base * s->occupants / sjobs) : 0;
+                        }
+                        if (!has_health && s_t == TILE_HOSPITAL_NW && dist < HOSPITAL_RADIUS && s->occupants > 0) {
+                            has_health = 1;
+                            uint8_t hjobs = bldg_jobs(TILE_HOSPITAL_NW);
+                            health_d += (hjobs > 0) ? (int16_t)(10 * s->occupants / hjobs) : 0;
+                        }
+                        if (!has_police && s_t == TILE_POLICE_NW && dist < POLICE_RADIUS && s->occupants > 0) {
+                            has_police = 1;
+                            crime_d -= 2;
+                        }
+                        if (!has_bar  && s_t == TILE_BAR_NW && dist < BAR_RADIUS && s->occupants > 0) has_bar  = 1;
+                        if (!has_work && (s_t == TILE_FARM_NW || s_t == TILE_PLANTATION_NW || s_t == TYPE_FACTORY_NW || s_t == TILE_MINE_NW || s_t == TILE_WOOD_NW || s_t == TYPE_MALL_NW) && dist < WORK_RADIUS && s->occupants > 0) has_work = 1;
                     }
-                    if (!has_health && s_t == TILE_HOSPITAL_NW && dist < HOSPITAL_RADIUS && s->occupants > 0) {
-                        has_health = 1;
-                        uint8_t hjobs = bldg_jobs(TILE_HOSPITAL_NW);
-                        health_d += (hjobs > 0) ? (int16_t)(10 * s->occupants / hjobs) : 0;
-                    }
-                    if (!has_police && s_t == TILE_POLICE_NW && dist < POLICE_RADIUS && s->occupants > 0) {
-                        has_police = 1;
-                        crime_d -= 2;
-                    }
-                    if (!has_bar  && s_t == TILE_BAR_NW && dist < BAR_RADIUS && s->occupants > 0) has_bar  = 1;
-                    if (!has_work && (s_t == TILE_FARM_NW || s_t == TILE_PLANTATION_NW || s_t == TYPE_FACTORY_NW || s_t == TILE_MINE_NW || s_t == TILE_WOOD_NW || s_t == TYPE_MALL_NW) && dist < WORK_RADIUS && s->occupants > 0) has_work = 1;
-                }
-                // Pénalité pollution : mine ou centrale dans POLLUTION_RADIUS
-                uint8_t has_pollution = 0;
-                for (si = 0; si < building_count; si++) {
-                    BuildingInstance *s = &building_registry[si];
-                    uint8_t s_t = s->type;
-                    if (s_t == TILE_MINE_NW || s_t == TILE_POWER_NW) {
-                        uint16_t dist = abs(h_x - (s->map_idx % 64)) + abs(h_y - (s->map_idx / 64));
-                        if (dist < POLLUTION_RADIUS) { has_pollution = 1; break; }
-                    }
+                    // Pollution : mine ou centrale, sans besoin de route
+                    if (!has_pollution && (s_t == TILE_MINE_NW || s_t == TILE_POWER_NW) && dist < POLLUTION_RADIUS)
+                        has_pollution = 1;
+                    // Early exit si tout est trouvé
+                    if (has_school && has_health && has_police && has_bar && has_work && has_pollution) break;
                 }
                 // Poids de désirabilité : 1 minimum + 1 par aménité staffée (max 5)
                 uint8_t amenity_count = has_health + has_police + has_bar + has_work + has_school;
@@ -507,3 +503,5 @@ void update_economy(void) {
         game.population = (uint16_t)new_pop;
     }
 }
+
+// update_economy_start() et update_economy_tick() déplacées dans economy_tick.c (bank 4)

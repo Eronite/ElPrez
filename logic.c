@@ -78,6 +78,9 @@ uint8_t current_step = 0;
 
 uint16_t alert_timer = 0; // 0 = pas d'alerte (pour le flash électricité)
 
+// Étalement du refresh des flags sur plusieurs frames
+int16_t flags_step = -1; // -1 = idle, 0..N = refresh en cours
+
 
 // Nombre d'options par catégorie (ex: Catégorie 0: 2 outils, Catégorie 1: 3 outils...)
 uint8_t sub_tool_counts[] = { 3, 4, 3, 4, 3, 2 };
@@ -173,23 +176,6 @@ uint8_t get_max_capacity(uint8_t type) {
     }
 }
 
-/*void update_building_flags(uint8_t reg_idx) {
-    BuildingInstance *b = &building_registry[reg_idx];
-    uint16_t idx = b->map_idx;
-    uint8_t wx = (uint8_t)(idx & 63);
-    uint8_t wy = (uint8_t)(idx >> 6);
-    uint8_t t;
-    uint8_t i;
-    b->flags &= ~(BLDG_FLAG_HAS_ROAD | BLDG_FLAG_HAS_NEIGHBOR | BLDG_FLAG_HAS_POWER);
-    // 4 voisins directs de la case NW (simple et compact)
-    if (wy > 0)  { t = ram_map[idx - 64]; if (t == VAL_ROAD) b->flags |= BLDG_FLAG_HAS_ROAD; else if (!IS_EMPTY(t)) b->flags |= BLDG_FLAG_HAS_NEIGHBOR; }
-    if (wy < 63) { t = ram_map[idx + 64]; if (t == VAL_ROAD) b->flags |= BLDG_FLAG_HAS_ROAD; else if (!IS_EMPTY(t)) b->flags |= BLDG_FLAG_HAS_NEIGHBOR; }
-    if (wx > 0)  { t = ram_map[idx - 1];  if (t == VAL_ROAD) b->flags |= BLDG_FLAG_HAS_ROAD; else if (!IS_EMPTY(t)) b->flags |= BLDG_FLAG_HAS_NEIGHBOR; }
-    if (wx < 63) { t = ram_map[idx + 1];  if (t == VAL_ROAD) b->flags |= BLDG_FLAG_HAS_ROAD; else if (!IS_EMPTY(t)) b->flags |= BLDG_FLAG_HAS_NEIGHBOR; }
-    for (i = 0; i < building_count; i++)
-        if (building_registry[i].type == TILE_POWER_NW) { b->flags |= BLDG_FLAG_HAS_POWER; break; }
-}*/
-
 void update_building_flags(uint8_t reg_idx) {
     BuildingInstance *b = &building_registry[reg_idx];
     uint16_t nw_idx = b->map_idx;
@@ -204,22 +190,18 @@ void update_building_flags(uint8_t reg_idx) {
     else if (t == TILE_HOUSE_NW || t == TILE_FARM_NW || t == TILE_CHURCH_NW || t == TILE_MEDIADISCO_NW) sz = 3;
     else if (t == TYPE_FACTORY_NW || t == TYPE_MALL_NW || t == TILE_WOOD_NW || t == TILE_HOSPITAL_NW || t == TILE_POWER_NW || t == TILE_MINE_NW) sz = 4;
 
-    // 2. Reset des flags route et voisin
-    b->flags &= ~(BLDG_FLAG_HAS_ROAD | BLDG_FLAG_HAS_NEIGHBOR);
+    // 2. Reset flag route
+    b->flags &= ~BLDG_FLAG_HAS_ROAD;
 
-    // 3. Scan du périmètre : route directe ou tuile non-vide (voisin)
+    // 3. Scan du périmètre : route directe
     for (uint8_t i = 0; i < sz; i++) {
         uint8_t cur_x = x + i;
         if (cur_x < 64) {
             if (y > 0) {
-                uint8_t tile = ram_map[((uint16_t)(y - 1) << 6) + cur_x];
-                if (tile == VAL_ROAD) { b->flags |= BLDG_FLAG_HAS_ROAD; return; }
-                else if (!IS_EMPTY(tile)) b->flags |= BLDG_FLAG_HAS_NEIGHBOR;
+                if (ram_map[((uint16_t)(y - 1) << 6) + cur_x] == VAL_ROAD) { b->flags |= BLDG_FLAG_HAS_ROAD; return; }
             }
             if (y + sz < 64) {
-                uint8_t tile = ram_map[((uint16_t)(y + sz) << 6) + cur_x];
-                if (tile == VAL_ROAD) { b->flags |= BLDG_FLAG_HAS_ROAD; return; }
-                else if (!IS_EMPTY(tile)) b->flags |= BLDG_FLAG_HAS_NEIGHBOR;
+                if (ram_map[((uint16_t)(y + sz) << 6) + cur_x] == VAL_ROAD) { b->flags |= BLDG_FLAG_HAS_ROAD; return; }
             }
         }
     }
@@ -228,72 +210,42 @@ void update_building_flags(uint8_t reg_idx) {
         if (cur_y < 64) {
             uint16_t row_offset = (uint16_t)cur_y << 6;
             if (x > 0) {
-                uint8_t tile = ram_map[row_offset + (x - 1)];
-                if (tile == VAL_ROAD) { b->flags |= BLDG_FLAG_HAS_ROAD; return; }
-                else if (!IS_EMPTY(tile)) b->flags |= BLDG_FLAG_HAS_NEIGHBOR;
+                if (ram_map[row_offset + (x - 1)] == VAL_ROAD) { b->flags |= BLDG_FLAG_HAS_ROAD; return; }
             }
             if (x + sz < 64) {
-                uint8_t tile = ram_map[row_offset + (x + sz)];
-                if (tile == VAL_ROAD) { b->flags |= BLDG_FLAG_HAS_ROAD; return; }
-                else if (!IS_EMPTY(tile)) b->flags |= BLDG_FLAG_HAS_NEIGHBOR;
+                if (ram_map[row_offset + (x + sz)] == VAL_ROAD) { b->flags |= BLDG_FLAG_HAS_ROAD; return; }
             }
         }
     }
 }
 
-void refresh_all_building_flags(void) {
-    uint8_t i;
-    // Passe 1 : route directe + détection voisins
-    for (i = 0; i < building_count; i++) {
-        update_building_flags(i);
+// Refresh étalé des flags — appeler à chaque frame tant que flags_step >= 0.
+// Retourne 1 quand terminé (flags_step revient à -1).
+#define FLAGS_CHUNK 8
+uint8_t refresh_flags_tick(void) {
+    uint8_t i, end;
+
+    if (flags_step < 0) return 1;
+
+    if (flags_step < (int16_t)building_count) {
+        // Passe 1 : route directe + voisins, CHUNK bâtiments
+        end = (uint8_t)flags_step + FLAGS_CHUNK;
+        if (end > building_count) end = building_count;
+        for (i = (uint8_t)flags_step; i < end; i++)
+            update_building_flags(i);
+        flags_step = (int16_t)end;
+        if (flags_step < (int16_t)building_count) return 0;
+        flags_step = 255; // direct passe 3 (passe 2 supprimée)
+        return 0;
     }
-    // Passe 2 : propagation — si voisin d'un bâtiment connecté à une route
-    for (i = 0; i < building_count; i++) {
-        BuildingInstance *b = &building_registry[i];
-        if (b->flags & BLDG_FLAG_HAS_ROAD) continue; // déjà connecté
-        if (!(b->flags & BLDG_FLAG_HAS_NEIGHBOR)) continue; // pas de voisin
-        // Cherche un voisin dans le registre qui a une route
-        uint8_t bx = (uint8_t)(b->map_idx & 63);
-        uint8_t by = (uint8_t)(b->map_idx >> 6);
-        uint8_t bsz = 1;
-        uint8_t bt = b->type;
-        if (bt == TILE_PLANTATION_NW || bt == TILE_POLICE_NW || bt == TILE_SCHOOL_NW || bt == TILE_BAR_NW) bsz = 2;
-        else if (bt == TILE_HOUSE_NW || bt == TILE_FARM_NW || bt == TILE_CHURCH_NW || bt == TILE_MEDIADISCO_NW) bsz = 3;
-        else if (bt == TYPE_FACTORY_NW || bt == TYPE_MALL_NW || bt == TILE_WOOD_NW || bt == TILE_HOSPITAL_NW || bt == TILE_POWER_NW || bt == TILE_MINE_NW) bsz = 4;
-        uint8_t j;
-        for (j = 0; j < building_count; j++) {
-            if (i == j) continue;
-            BuildingInstance *s = &building_registry[j];
-            if (!(s->flags & BLDG_FLAG_HAS_ROAD)) continue;
-            // Vérifie l'adjacence entre b et s
-            uint8_t sx = (uint8_t)(s->map_idx & 63);
-            uint8_t sy = (uint8_t)(s->map_idx >> 6);
-            uint8_t ssz = 1;
-            uint8_t st = s->type;
-            if (st == TILE_PLANTATION_NW || st == TILE_POLICE_NW || st == TILE_SCHOOL_NW || st == TILE_BAR_NW) ssz = 2;
-            else if (st == TILE_HOUSE_NW || st == TILE_FARM_NW || st == TILE_CHURCH_NW || st == TILE_MEDIADISCO_NW) ssz = 3;
-            else if (st == TYPE_FACTORY_NW || st == TYPE_MALL_NW || st == TILE_WOOD_NW || st == TILE_HOSPITAL_NW || st == TILE_POWER_NW || st == TILE_MINE_NW) ssz = 4;
-            // Adjacence : les deux blocs se touchent (distance bord à bord = 1)
-            uint8_t touching = 0;
-            if (sx + ssz == bx || bx + bsz == sx) {
-                // b et s sont côte à côte horizontalement — vérifie chevauchement vertical
-                if (!(by >= sy + ssz || sy >= by + bsz)) touching = 1;
-            }
-            if (sy + ssz == by || by + bsz == sy) {
-                // b et s sont côte à côte verticalement — vérifie chevauchement horizontal
-                if (!(bx >= sx + ssz || sx >= bx + bsz)) touching = 1;
-            }
-            if (touching) { b->flags |= BLDG_FLAG_HAS_ROAD; break; }
-        }
-    }
-    // Passe 3 : recalcul HAS_POWER — actif si une centrale avec route existe
+
+    // flags_step == 255 : passe 3 HAS_POWER (O(N), une seule frame)
     {
         uint8_t has_power = 0;
         for (i = 0; i < building_count; i++) {
             if (building_registry[i].type == TILE_POWER_NW &&
                 (building_registry[i].flags & BLDG_FLAG_HAS_ROAD)) {
-                has_power = 1;
-                break;
+                has_power = 1; break;
             }
         }
         for (i = 0; i < building_count; i++) {
@@ -301,6 +253,8 @@ void refresh_all_building_flags(void) {
             else           building_registry[i].flags &= ~BLDG_FLAG_HAS_POWER;
         }
     }
+    flags_step = -1;
+    return 1;
 }
 
 void add_building(uint16_t map_idx, uint8_t type) {
@@ -651,8 +605,8 @@ void update_game_logic() { // ici les count_buildings sont ok
         wait_vbl_done();
 
         // --- ÉCONOMIE COMPLÈTE (ressources, emplois, bonheur, criminalité…) ---
-        // economy.c est en bank 3 ; appel via wrapper nonbanked (bank 0)
-        call_update_economy();
+        // Calcul étalé sur plusieurs frames via update_economy_tick() appelé dans la boucle principale
+        call_update_economy_start();
 
         // --- BILAN ALIMENTAIRE ---
         uint8_t prev_famine = game.is_in_famine;

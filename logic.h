@@ -53,7 +53,8 @@ uint8_t get_max_capacity(uint8_t type);
 void    add_building(uint16_t map_idx, uint8_t type);
 void    remove_building(uint16_t map_idx);
 void    update_building_flags(uint8_t reg_idx);
-void refresh_all_building_flags(void);
+uint8_t refresh_flags_tick(void);
+extern int16_t flags_step;
 void    rebuild_registry_from_map(void);
 
 

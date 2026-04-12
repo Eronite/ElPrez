@@ -250,6 +250,16 @@ void call_update_economy(void) __nonbanked {
     update_economy();
     SWITCH_ROM(1);
 }
+void call_update_economy_start(void) __nonbanked {
+    SWITCH_ROM(6);
+    update_economy_start();
+    SWITCH_ROM(1);
+}
+void call_update_economy_tick(void) __nonbanked {
+    SWITCH_ROM(6);
+    update_economy_tick();
+    SWITCH_ROM(1);
+}
 
 // Wrappers nonbanked pour appels depuis economy.c (bank 3) vers bank 1
 // (après l'appel, on restaure bank 3 pour que l'appelant soit encore mappé)
@@ -484,6 +494,7 @@ call_intro_title_animation();
         uint8_t move_timer = 0;
         uint8_t hud_money_dirty = 0;
         uint8_t hud_throttle = 0;
+        // (flags_step est global dans logic.c, pas besoin de déclaration locale)
         while (1) { // boucle de jeu
 
 
@@ -659,7 +670,7 @@ call_intro_title_animation();
                                     if (rx < 63) update_road_display(rx + 1, ry);
                                     if (ry > 0)  update_road_display(rx, ry - 1);
                                     if (ry < 63) update_road_display(rx, ry + 1);
-                                    refresh_all_building_flags();
+                                    flags_step = 0; // déclenche le refresh étalé
                                 } else {
                                     remove_building(((uint16_t)ry * 64) + rx);
                                 }
@@ -753,7 +764,6 @@ call_intro_title_animation();
                                 add_building(bidx, base_tile);
                                 if (ore_count >= 4)
                                     building_registry[building_count - 1].flags |= BLDG_FLAG_HAS_ORE;
-                                refresh_all_building_flags();
                                 //play_construction_fx(curs_x, curs_y, size);
                             //}
                         }
@@ -860,6 +870,8 @@ call_intro_title_animation();
                     }
                 }
             }
+            if (flags_step >= 0) refresh_flags_tick();
+            call_update_economy_tick();
             wait_vbl_done();
         }
     }
