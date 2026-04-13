@@ -11,6 +11,7 @@ extern const unsigned char menu_border_tiles[];
 #define FONT_LC_START 128u
 
 extern const uint8_t font_lc_tiles[];
+void nb_update_road_display_safe(uint8_t x, uint8_t y);
 
 void load_lowercase_font(void) {
     uint8_t saved = CURRENT_BANK;
@@ -216,7 +217,7 @@ void draw_tile(uint8_t tx, uint8_t ty) {
     // 3. LOGIQUE SPÉCIALE ROUTE
     if (tile == VAL_ROAD) {
         // Au lieu de dessiner "1", on appelle la fonction qui choisit la bonne tuile
-        update_road_display(tx, ty);
+        nb_update_road_display_safe(tx, ty);
     } else {
         // Dessin normal pour le reste (herbe, batiments...)
         // Utilise & 31 au lieu de % 32 (plus rapide)

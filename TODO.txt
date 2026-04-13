@@ -92,6 +92,8 @@ bug salaires qui reviennent à 0, seulement de temps en temps, et c'est quand on
 *
 ***********TODO :TEST LE FIX DES SALAIRES QUI SONT A 0 QD ON ETEINT LA GB ET RECHARGE UNE GAME (fix pas commit)
 
+aclean178afterDecree> libréré bank 0 , et apparemment plus de bug préexistants (à vérifier), maintenant il faut faire de la place en bank 1 pour pouvoir implémenter : voir si on a déjà la prise en comtpe des revenus de la conserverie , du bar
+CORRIGER BUG message manque électricité ne s'affiche pas avec les bonnes tiles
 
 ajouter les deux points à la fonction de draw text
 

@@ -1,3 +1,4 @@
+#pragma bank 7
 #include <gb/gb.h>
 #include <stdint.h>
 #include <gbdk/font.h>
@@ -66,9 +67,10 @@ void nb_get_mission_step_b4(uint8_t step_idx, MissionStep *out) __nonbanked {
 // Wrapper NONBANKED : toujours en bank 0 (fixe), safe pour switcher vers bank 2
 // intro_title_animation() est en bank 2 (#pragma bank 2 dans intro.c)
 void call_intro_title_animation(void) __nonbanked {
+    uint8_t saved = CURRENT_BANK;
     SWITCH_ROM(2);
     intro_title_animation();
-    SWITCH_ROM(1);
+    SWITCH_ROM(saved);
 }
 
 // Wrapper NONBANKED pour la minimap (bank 2)
@@ -130,12 +132,13 @@ void nb_reload_limo_tiles_b1(void) __nonbanked {
 
 // Appelé depuis boat.c (bank 1) : charge les tiles boat ou boatBack depuis bank 3.
 void nb_reload_boat_tiles_b1(uint8_t fwd) __nonbanked {
+    uint8_t saved = CURRENT_BANK;
     SWITCH_ROM(3);
     const unsigned char *src = fwd ? boat : boatBack;
     set_sprite_data(0x7Au, 2, src);
     set_sprite_data(0x7Cu, 1, src + 32u);
     set_sprite_data(0x7Eu, 1, src + 48u);
-    SWITCH_ROM(1);
+    SWITCH_ROM(saved);
 }
 
 // Appelé depuis menus.c (bank 2) : recharge les 9 tiles eau (0x6D-0x75) depuis bank 3.
@@ -256,9 +259,10 @@ void call_update_economy_start(void) __nonbanked {
     SWITCH_ROM(1);
 }
 void call_update_economy_tick(void) __nonbanked {
+    uint8_t saved = CURRENT_BANK;
     SWITCH_ROM(6);
     update_economy_tick();
-    SWITCH_ROM(1);
+    SWITCH_ROM(saved);
 }
 
 // Wrappers nonbanked pour appels depuis economy.c (bank 3) vers bank 1
@@ -294,7 +298,182 @@ uint8_t nb_get_erase_info(uint8_t et, EraseInfo *out) __nonbanked {
 uint8_t get_sub_tool_count(uint8_t category);
 extern const uint8_t building_mapping[6][4];
 
-void main(void) {
+uint8_t nb_get_building_tool_b7(uint8_t cat, uint8_t sub) __nonbanked {
+    uint8_t r; SWITCH_ROM(1); r = building_mapping[cat][sub]; SWITCH_ROM(7); return r; }
+
+// ---- Wrappers NONBANKED bank 1 → retour bank 7 (pour game_main()) ----
+void nb_move_cursor_b7(uint8_t x, uint8_t y, int16_t cx, int16_t cy) __nonbanked {
+    SWITCH_ROM(1); move_cursor(x, y, cx, cy); SWITCH_ROM(7); }
+void nb_update_game_logic_b7(void) __nonbanked {
+    SWITCH_ROM(1); update_game_logic(); SWITCH_ROM(7); }
+void nb_update_story_logic_b7(void) __nonbanked {
+    SWITCH_ROM(1); update_story_logic(); SWITCH_ROM(7); }
+void nb_cars_update_b7(int16_t cx, int16_t cy) __nonbanked {
+    SWITCH_ROM(1); cars_update(cx, cy); SWITCH_ROM(7); }
+void nb_tram_update_b7(int16_t cx, int16_t cy) __nonbanked {
+    SWITCH_ROM(1); tram_update(cx, cy); SWITCH_ROM(7); }
+void nb_boat_update_b7(int16_t cx, int16_t cy) __nonbanked {
+    SWITCH_ROM(1); boat_update(cx, cy); SWITCH_ROM(7); }
+void nb_draw_hud_money_date_b7(uint8_t row) __nonbanked {
+    SWITCH_ROM(1); draw_hud_money_date(row); SWITCH_ROM(7); }
+void nb_refresh_flags_tick_b7(void) __nonbanked {
+    SWITCH_ROM(1); refresh_flags_tick(); SWITCH_ROM(7); }
+void nb_update_hud_b7(void) __nonbanked {
+    SWITCH_ROM(1); update_hud(); SWITCH_ROM(7); }
+void nb_update_road_display_b7(uint8_t x, uint8_t y) __nonbanked {
+    SWITCH_ROM(1); update_road_display(x, y); SWITCH_ROM(7); }
+void nb_update_road_display_safe(uint8_t x, uint8_t y) __nonbanked {
+    uint8_t s = CURRENT_BANK; SWITCH_ROM(1); update_road_display(x, y); SWITCH_ROM(s); }
+void nb_update_building_flags_b7(uint8_t idx) __nonbanked {
+    SWITCH_ROM(1); update_building_flags(idx); SWITCH_ROM(7); }
+void nb_add_building_b7(uint16_t idx, uint8_t type) __nonbanked {
+    SWITCH_ROM(1); add_building(idx, type); SWITCH_ROM(7); }
+void nb_remove_building_b7(uint16_t idx) __nonbanked {
+    SWITCH_ROM(1); remove_building(idx); SWITCH_ROM(7); }
+void nb_cars_init_b7(void) __nonbanked {
+    SWITCH_ROM(1); cars_init(); SWITCH_ROM(7); }
+void nb_play_sound_build_b7(void) __nonbanked {
+    SWITCH_ROM(1); play_sound_build(); SWITCH_ROM(7); }
+void nb_play_sound_erase_b7(void) __nonbanked {
+    SWITCH_ROM(1); play_sound_erase(); SWITCH_ROM(7); }
+void nb_play_sound_error_b7(void) __nonbanked {
+    SWITCH_ROM(1); play_sound_error(); SWITCH_ROM(7); }
+void nb_play_destruction_fx_b7(uint8_t x, uint8_t y, uint8_t s) __nonbanked {
+    SWITCH_ROM(1); play_destruction_fx(x, y, s); SWITCH_ROM(7); }
+uint8_t nb_get_sub_tool_count_b7(uint8_t cat) __nonbanked {
+    uint8_t r; SWITCH_ROM(1); r = get_sub_tool_count(cat); SWITCH_ROM(7); return r; }
+void nb_force_cursor_update_b7(void) __nonbanked {
+    SWITCH_ROM(1); force_cursor_update(); SWITCH_ROM(7); }
+void nb_update_sub_tool_icons_b7(void) __nonbanked {
+    SWITCH_ROM(1); update_sub_tool_icons(); SWITCH_ROM(7); }
+void nb_enable_sram_b7(void) __nonbanked {
+    SWITCH_ROM(1); enable_sram(); SWITCH_ROM(7); }
+void nb_disable_sram_b7(void) __nonbanked {
+    SWITCH_ROM(1); disable_sram(); SWITCH_ROM(7); }
+void nb_switch_ram_bank_b7(uint8_t bank) __nonbanked {
+    SWITCH_ROM(1); switch_ram_bank(bank); SWITCH_ROM(7); }
+void nb_trigger_alert_b7(char* msg) __nonbanked {
+    SWITCH_ROM(1); trigger_alert(msg); SWITCH_ROM(7); }
+
+// Charge tous les assets initiaux depuis bank 3 (appelé depuis game_main() bank 7)
+void nb_load_all_assets_b7(void) __nonbanked {
+    SWITCH_ROM(3);
+    set_bkg_data(128, 32, tile_data);
+    set_bkg_data(160, 9, farmish);
+    set_bkg_data(169, 4, plantation);
+    set_bkg_data(173, 16, sawmill);
+    set_bkg_data(189, 4, police);
+    set_bkg_data(193, 9, church);
+    set_bkg_data(202, 16, hospital);
+    set_bkg_data(61, 4, basicCom);
+    set_bkg_data(218, 16, power);
+    set_bkg_data(234, 16, mine);
+    set_bkg_data(0x59, 9, mediaDisco);
+    set_bkg_data(0x63, 4, baraque);
+    set_bkg_data(0x6D, 6, water);
+    set_bkg_data(0x67, 6, road_x6);
+    set_bkg_data(0x73, 3, road_inters);
+    set_bkg_data(0xFF, 1, oneTileHome);
+    set_bkg_data(37, 16, shop);
+    set_bkg_data(53, 7, specialChars);
+    set_bkg_data(60, 1, fleche);
+    set_bkg_data(65, 4, iconCatRoadDel);
+    set_bkg_data(69, 4, iconBuildings);
+    set_bkg_data(73, 4, iconRes);
+    set_bkg_data(77, 4, iconGov);
+    set_bkg_data(81, 4, iconMines);
+    set_bkg_data(85, 4, iconCatLoisirs);
+    set_bkg_data(0x62, 1, dollar);
+    set_bkg_data(0x76, 3, troisCotesMer);
+    set_bkg_data(0x6D, 5, water);
+    set_bkg_data(0xFA, 1, charb);
+    set_bkg_data(0xFB, 4, port);
+    set_sprite_data(PENULTIMO_TILE_START, 14, penultimoBig);
+    set_sprite_data(5, 4, icon01);
+    set_sprite_data(9, 27, limousine);
+    set_sprite_data(0, 5, cursor_data);
+    set_sprite_data(0x28, 4, iconSubRoad);
+    set_sprite_data(0x2C, 4, iconSubDel);
+    set_sprite_data(0x30, 4, iconSubHouse);
+    set_sprite_data(0x34, 4, iconSubShop);
+    set_sprite_data(0x38, 4, iconSubFactory);
+    set_sprite_data(0x3C, 4, iconSubFarm);
+    set_sprite_data(0x40, 4, iconSubPlantation);
+    set_sprite_data(0x44, 4, iconSubWood);
+    set_sprite_data(0x48, 4, iconSubPolice);
+    set_sprite_data(0x4C, 4, iconSubChurch);
+    set_sprite_data(0x50, 4, iconSubHospital);
+    set_sprite_data(0x54, 4, iconSubSchool);
+    set_sprite_data(0x58, 4, iconEnergy);
+    set_sprite_data(0x5C, 4, iconSubMines);
+    set_sprite_data(0x64, 4, iconSubBar);
+    set_sprite_data(0x68, 4, iconSubMediaDisco);
+    set_sprite_data(0x6C, 4, iconSubUpgrade);
+    set_sprite_data(0x60, 4, iconSubPort);
+    set_sprite_data(0x24, 4, iconSubOneTileHome);
+    set_sprite_data(50, 4, titleEl);
+    set_sprite_data(54, 18, titlePresidente);
+    set_sprite_data(0x7D, 1, cursor_tick_tile);
+    set_sprite_data(0x7F, 1, flash);
+    SWITCH_ROM(7);
+}
+
+// Recharge les sprites après l'intro (bank 3 → bank 7)
+void nb_reload_after_intro_b7(void) __nonbanked {
+    SWITCH_ROM(3);
+    set_sprite_data(0x05, 1, car_tile_h);
+    set_sprite_data(0x06, 1, car_tile_v);
+    set_sprite_data(0x07, 1, car_tile_h2);
+    set_sprite_data(0x08, 1, car_tile_v2);
+    set_sprite_data(0x76, 4, tram);
+    set_sprite_data(0x7Au, 2, boat);
+    set_sprite_data(0x7Cu, 1, boat + 32u);
+    set_sprite_data(0x7Eu, 1, boat + 48u);
+    set_sprite_data(0x30, 4, iconSubHouse);
+    set_sprite_data(0x34, 4, iconSubShop);
+    set_sprite_data(0x38, 4, iconSubFactory);
+    set_sprite_data(0x3C, 4, iconSubFarm);
+    set_sprite_data(0x40, 4, iconSubPlantation);
+    set_sprite_data(0x44, 4, iconSubWood);
+    SWITCH_ROM(7);
+}
+
+// Recharge la limo depuis bank 3 (boucle de jeu, bank 7)
+void nb_reload_limo_b7(void) __nonbanked {
+    SWITCH_ROM(3);
+    set_sprite_data(9, 27, limousine);
+    SWITCH_ROM(7);
+}
+
+// Lance plane_init() depuis bank 3 (boucle de jeu, bank 7)
+void nb_plane_init_b7(void) __nonbanked {
+    SWITCH_ROM(3);
+    plane_init();
+    SWITCH_ROM(7);
+}
+
+// Cherche le bâtiment sous le curseur et ouvre le menu contextuel (bank 3, bank 7)
+uint8_t nb_find_and_context_menu_b7(void) __nonbanked {
+    uint8_t bldg_idx;
+    SWITCH_ROM(3);
+    bldg_idx = find_building_at_cursor();
+    if (bldg_idx != 0xFF) {
+        show_building_context_menu(bldg_idx);
+    }
+    SWITCH_ROM(7);
+    return bldg_idx;
+}
+
+// Appels bank 2 depuis game_main() (bank 7)
+void nb_language_selection_screen_b7(void) __nonbanked { SWITCH_ROM(2); language_selection_screen(); SWITCH_ROM(7); }
+void nb_main_menu_b7(void) __nonbanked { SWITCH_ROM(2); main_menu(); SWITCH_ROM(7); }
+void nb_pause_menu_b7(void) __nonbanked { SWITCH_ROM(2); pause_menu(); SWITCH_ROM(7); }
+void nb_show_menu_b7(void) __nonbanked {
+    SWITCH_ROM(1); show_menu(); SWITCH_ROM(7); }
+void nb_hide_menu_b7(void) __nonbanked {
+    SWITCH_ROM(1); hide_menu(); SWITCH_ROM(7); }
+
+void game_main(void) {
     DISPLAY_OFF;
     
     //init_game_variables();
@@ -314,135 +493,48 @@ void main(void) {
     uint8_t last_placed_y = 255;
 
     // Toutes les données de tiles/sprites sont en bank 3 (assets.c)
-    SWITCH_ROM(3);
-    set_bkg_data(128, 32, tile_data);
-    set_bkg_data(160, 9, farmish);
-    set_bkg_data(169, 4, plantation);
-    set_bkg_data(173, 16, sawmill);
-    set_bkg_data(189, 4, police);
-    set_bkg_data(193, 9, church);
-    set_bkg_data(202, 16, hospital);
-    set_bkg_data(61, 4, basicCom); // used for school
-    set_bkg_data(218, 16, power);
-    set_bkg_data(234, 16, mine);
-    set_bkg_data(0x59, 9, mediaDisco);
-    set_bkg_data(0x63, 4, baraque);
-    set_bkg_data(0x6D, 6, water);
-    set_bkg_data(0x67, 6, road_x6);
+    nb_load_all_assets_b7();
 
-set_bkg_data(0x73, 3, road_inters);
-set_bkg_data(0xFF, 1, oneTileHome);
-
-    set_bkg_data(37, 16, shop);
-    set_bkg_data(53, 7, specialChars);
-    set_bkg_data(60, 1, fleche);
-    set_bkg_data(65, 4, iconCatRoadDel);
-    set_bkg_data(69, 4, iconBuildings);
-    set_bkg_data(73, 4, iconRes);
-    set_bkg_data(77, 4, iconGov);
-    set_bkg_data(81, 4, iconMines);
-    set_bkg_data(85, 4, iconCatLoisirs);
-    set_bkg_data(0x62, 1, dollar);
-
-    set_bkg_data(0x76, 3, troisCotesMer);
-
-set_bkg_data(0x6D, 5, water);
-set_bkg_data(0xFA, 1, charb);
-
-set_bkg_data(0xFB, 4, port);
-
-    //set_sprite_data(38, 1, fume);
-    set_sprite_data(PENULTIMO_TILE_START, 14, penultimoBig);
-    set_sprite_data(5, 4, icon01);
-    set_sprite_data(9, 27, limousine);
-    //set_sprite_data(36, 2, roues);
-    set_sprite_data(0, 5, cursor_data);
-    set_sprite_data(0x28, 4, iconSubRoad);
-    set_sprite_data(0x2C, 4, iconSubDel);
-    set_sprite_data(0x30, 4, iconSubHouse);
-    set_sprite_data(0x34, 4, iconSubShop);
-    set_sprite_data(0x38, 4, iconSubFactory);
-    set_sprite_data(0x3C, 4, iconSubFarm);
-    set_sprite_data(0x40, 4, iconSubPlantation);
-    set_sprite_data(0x44, 4, iconSubWood);
-    set_sprite_data(0x48, 4, iconSubPolice);
-    set_sprite_data(0x4C, 4, iconSubChurch);
-    set_sprite_data(0x50, 4, iconSubHospital);
-    set_sprite_data(0x54, 4, iconSubSchool);
-    set_sprite_data(0x58, 4, iconEnergy);
-    set_sprite_data(0x5C, 4, iconSubMines);
-    set_sprite_data(0x64, 4, iconSubBar);
-    set_sprite_data(0x68, 4, iconSubMediaDisco);
-    set_sprite_data(0x6C, 4, iconSubUpgrade);
-
-set_sprite_data(0x60, 4, iconSubPort);
-set_sprite_data(0x24, 4, iconSubOneTileHome);
-
-    // titleEl/titlePresidente chargés en dernier pour ne pas être écrasés par les iconSub*
-    set_sprite_data(50, 4, titleEl);
-    set_sprite_data(54, 18, titlePresidente);
-    set_sprite_data(0x7D, 1, cursor_tick_tile); // tick/coche objectif (page Mission)
-    // pour les flash alerte manque d'élec :
-    set_sprite_data(0x7F, 1, flash);
-    //init_flash_pool();
-
-    SWITCH_ROM(1);
-
-call_intro_title_animation();
+    call_intro_title_animation();
 
     // Après l'intro, les iconSub 0x30-0x44 ont été écrasés par titleEl/titlePresidente : on les recharge
     // On charge aussi les tiles voiture en 0x05-0x08
-    SWITCH_ROM(3);
-    set_sprite_data(0x05, 1, car_tile_h);
-    set_sprite_data(0x06, 1, car_tile_v);
-    set_sprite_data(0x07, 1, car_tile_h2);
-    set_sprite_data(0x08, 1, car_tile_v2);
-    set_sprite_data(0x76, 4, tram); // tiles tram 0x76-0x79
-    set_sprite_data(0x7Au, 2, boat);        // tiles 0x7A-0x7B (NW, NE)
-    set_sprite_data(0x7Cu, 1, boat + 32u);  // tile 0x7C (SW)
-    set_sprite_data(0x7Eu, 1, boat + 48u);  // tile 0x7E (SE)
-    set_sprite_data(0x30, 4, iconSubHouse);
-    set_sprite_data(0x34, 4, iconSubShop);
-    set_sprite_data(0x38, 4, iconSubFactory);
-    set_sprite_data(0x3C, 4, iconSubFarm);
-    set_sprite_data(0x40, 4, iconSubPlantation);
-    set_sprite_data(0x44, 4, iconSubWood);
-    SWITCH_ROM(1);
+    nb_reload_after_intro_b7();
 
     // Restauration curseur après intro
     set_sprite_tile(0, 0);
 
-    SWITCH_ROM(2); language_selection_screen(); SWITCH_ROM(1);
+    nb_language_selection_screen_b7();
 
     // INITIALISATION DE LA SRAM (Slots vides) ---
     // On active la banque de registres de la cartouche pour autoriser la SRAM
     *(volatile uint8_t *)0x6000 = 0x01;
 
-    enable_sram();
+    nb_enable_sram_b7();
     for(uint8_t slot = 0; slot < 4; slot++) {
-        switch_ram_bank(slot);
+        nb_switch_ram_bank_b7(slot);
 
         // On pointe sur la structure en SRAM pour vérifier la signature
         GameState *sram_ptr = (GameState *)(0xA000 + 4096);
-        
+
         if (sram_ptr->signature != 99) {
             // Initialisation d'une carte vide pour les nouveaux slots
             for (uint16_t i = 0; i < 4096; i++) ram_map[i] = TYPE_EMPTY;
-            
+
             // On met une signature à 0 pour dire "Vide"
-            sram_ptr->signature = 0; 
+            sram_ptr->signature = 0;
         }
     }
-    
-    disable_sram();
+
+    nb_disable_sram_b7();
 
     while(1) { // Boucle "Application"
         force_return_to_menu = 0;
         fade_in();
-        SWITCH_ROM(2); main_menu(); SWITCH_ROM(1);
+        nb_main_menu_b7();
         fade_out();
         DISPLAY_OFF;
-        move_win(7, game.game_mode == MODE_STORY ? 144 : 136); update_view(); SCX_REG = (uint8_t)cam_x; SCY_REG = (uint8_t)cam_y; cam_target_x = cam_x; cam_target_y = cam_y; update_hud();
+        move_win(7, game.game_mode == MODE_STORY ? 144 : 136); update_view(); SCX_REG = (uint8_t)cam_x; SCY_REG = (uint8_t)cam_y; cam_target_x = cam_x; cam_target_y = cam_y; nb_update_hud_b7();
         
 //===============================================================================================================
         //===================================================================================================================
@@ -479,17 +571,13 @@ call_intro_title_animation();
         if (game.game_mode == MODE_STORY) move_win(7, 136);
 
         // Recharge les tiles limo (peuvent être écrasées par le portrait Penultimo lors d'une partie précédente)
-        SWITCH_ROM(3);
-        set_sprite_data(9, 27, limousine);
-        SWITCH_ROM(1);
+        nb_reload_limo_b7();
 
         // Recharge les tiles bateau (peuvent être écrasées par le menu principal)
         nb_reload_boat_tiles_b1(1);
 
-        cars_init();
-        SWITCH_ROM(3);
-        plane_init();
-        SWITCH_ROM(1);
+        nb_cars_init_b7();
+        nb_plane_init_b7();
 
         uint8_t move_timer = 0;
         uint8_t hud_money_dirty = 0;
@@ -501,7 +589,7 @@ call_intro_title_animation();
 
             // 1. DÉPLACEMENT DU CURSEUR (Toujours actif, même si A est pressé)
     // Cette fonction doit lire le joypad et changer curs_x/curs_y
-    move_cursor(curs_x, curs_y, cam_target_x, cam_target_y);
+    nb_move_cursor_b7(curs_x, curs_y, cam_target_x, cam_target_y);
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -519,17 +607,17 @@ call_intro_title_animation();
             if (joy & J_START && !is_menu_open) {
                 uint8_t hi;
                 for (hi = 21u; hi <= 39u; hi++) move_sprite(hi, 0u, 0u);
-                SWITCH_ROM(2); pause_menu(); SWITCH_ROM(1);
-                update_hud();
+                nb_pause_menu_b7();
+                nb_update_hud_b7();
             }
 
             if (joy & J_SELECT) {
                 if (!is_menu_open)
                 current_tool = 0; // remet le curseur sur la 1ere catégorie
-                show_menu(); // ça passe is_menu_open à 1 : elle sert à afficher le hud mais introuvable dans le code mdr
-                force_cursor_update();
+                nb_show_menu_b7(); // ça passe is_menu_open à 1 : elle sert à afficher le hud mais introuvable dans le code mdr
+                nb_force_cursor_update_b7();
 
-                update_sub_tool_icons(); // Affiche les icônes immédiatement
+                nb_update_sub_tool_icons_b7(); // Affiche les icônes immédiatement
 
                 waitpadup();
             }
@@ -574,8 +662,8 @@ call_intro_title_animation();
 
                 if (joy & J_A) {
                     if (!is_menu_open && (!(joy & (J_LEFT | J_RIGHT | J_UP | J_DOWN)) || current_tool == TOOL_ROAD || current_tool == TOOL_ERASE)){
-                    enable_sram();
-                    switch_ram_bank(current_save_slot);
+                    nb_enable_sram_b7();
+                    nb_switch_ram_bank_b7(current_save_slot);
                     uint16_t idx = ((uint16_t)curs_y * WORLD_WIDTH) + curs_x;
                     uint8_t t = ram_map[idx];
                     int32_t money_before = game.money;
@@ -599,23 +687,23 @@ call_intro_title_animation();
                                 if (game.decree_tram) tram_needs_spawn = 1;
 
                                 // On force l'affichage immédiat (ça écrase la tuile "1")
-                                update_road_display(prev_road_x, prev_road_y);
+                                nb_update_road_display_b7(prev_road_x, prev_road_y);
 
                                 // On met à jour les voisins
-                                if (prev_road_y > 0)  update_road_display(prev_road_x, prev_road_y - 1);
-                                if (prev_road_x < 63) update_road_display(prev_road_x + 1, prev_road_y);
-                                if (prev_road_y < 63) update_road_display(prev_road_x, prev_road_y + 1);
-                                if (prev_road_x > 0)  update_road_display(prev_road_x - 1, prev_road_y);
+                                if (prev_road_y > 0)  nb_update_road_display_b7(prev_road_x, prev_road_y - 1);
+                                if (prev_road_x < 63) nb_update_road_display_b7(prev_road_x + 1, prev_road_y);
+                                if (prev_road_y < 63) nb_update_road_display_b7(prev_road_x, prev_road_y + 1);
+                                if (prev_road_x > 0)  nb_update_road_display_b7(prev_road_x - 1, prev_road_y);
 
                                 // Recalcul des flags des bâtiments adjacents à la route posée
                                 for (uint8_t _ri = 0; _ri < building_count; _ri++)
-                                    update_building_flags(_ri);
+                                    nb_update_building_flags_b7(_ri);
 
                                 last_placed_x = prev_road_x;
                                 last_placed_y = prev_road_y;
 
                                 // Débloquer le spawn des voitures si elles attendaient une route
-                                if (cars_no_road) { cars_no_road = 0; cars_init(); }
+                                if (cars_no_road) { cars_no_road = 0; nb_cars_init_b7(); }
                             }
 
                             else {
@@ -654,8 +742,8 @@ call_intro_title_animation();
                                 }
                                 uint8_t off = et - base_t;
                                 uint8_t rx = erase_x - (off % size), ry = erase_y - (off / size);
-                                if (!(joy & (J_LEFT | J_RIGHT | J_UP | J_DOWN))) play_destruction_fx(erase_x, erase_y, 1);
-                                else play_sound_erase();
+                                if (!(joy & (J_LEFT | J_RIGHT | J_UP | J_DOWN))) nb_play_destruction_fx_b7(erase_x, erase_y, 1);
+                                else nb_play_sound_erase_b7();
                                 for(uint8_t j=0; j<size; j++) for(uint8_t i=0; i<size; i++) {
                                     ram_map[((uint16_t)(ry+j)*64)+rx+i] = TYPE_EMPTY;
                                     draw_tile(rx+i, ry+j);
@@ -666,13 +754,13 @@ call_intro_title_animation();
                                     if (baraque_count > 0) baraque_count--;
                                 } else if (base_t == TYPE_ROAD || base_t == VAL_ROAD || base_t == TYPE_ROAD_VERTI) {
                                     // Recalcule la tile des routes voisines (la route supprimée n'est plus dans la RAM)
-                                    if (rx > 0)  update_road_display(rx - 1, ry);
-                                    if (rx < 63) update_road_display(rx + 1, ry);
-                                    if (ry > 0)  update_road_display(rx, ry - 1);
-                                    if (ry < 63) update_road_display(rx, ry + 1);
+                                    if (rx > 0)  nb_update_road_display_b7(rx - 1, ry);
+                                    if (rx < 63) nb_update_road_display_b7(rx + 1, ry);
+                                    if (ry > 0)  nb_update_road_display_b7(rx, ry - 1);
+                                    if (ry < 63) nb_update_road_display_b7(rx, ry + 1);
                                     flags_step = 0; // déclenche le refresh étalé
                                 } else {
-                                    remove_building(((uint16_t)ry * 64) + rx);
+                                    nb_remove_building_b7(((uint16_t)ry * 64) + rx);
                                 }
                             }
                             erase_done:;
@@ -683,23 +771,16 @@ call_intro_title_animation();
                         waitpadup(); // A relâché avant d'entrer dans le menu (appelé depuis bank 0)
                         // Cacher les sprites de voiture et de tram pendant le menu
                         hide_vehicle_sprites();
-                        disable_sram();
+                        nb_disable_sram_b7();
                         {
-                            uint8_t bldg_idx;
-                            SWITCH_ROM(3);
-                            bldg_idx = find_building_at_cursor();
-                            if (bldg_idx != 0xFF) {
-                                //show_upgrade_menu(bldg_idx);
-                                show_building_context_menu(bldg_idx);
-                            }
-                            SWITCH_ROM(1);
+                            uint8_t bldg_idx = nb_find_and_context_menu_b7();
                             if (bldg_idx == 0xFF) {
-                                play_sound_error();
+                                nb_play_sound_error_b7();
                             }
                         }
-                        update_hud(); // HUD restauré depuis bank 1 (contexte correct)
-                        enable_sram();
-                        switch_ram_bank(current_save_slot);
+                        nb_update_hud_b7();
+                        nb_enable_sram_b7();
+                        nb_switch_ram_bank_b7(current_save_slot);
                     } else if (current_tool != TOOL_NONE) { // pose de bâtiment ==================
                         uint8_t size = nb_get_tool_size(current_tool);
                         
@@ -732,7 +813,7 @@ call_intro_title_animation();
                         // pour mine, conserverie et mediadisco : on vérifie qu'on a de l'électricité sinon on peut pas build :
                         if ((current_tool == TOOL_MEDIA) || (current_tool == TOOL_MINE) || (current_tool == TOOL_WOOD)) {
                             if (game.electricity_cons >= game.electricity_prod) {
-                                trigger_alert("MANQUE D'ELECTRICITE");
+                                nb_trigger_alert_b7("MANQUE D'ELECTRICITE");
                                 can_build = 0;
                             }
                         }
@@ -744,7 +825,7 @@ call_intro_title_animation();
                             /*if (current_tool == TOOL_HOUSE) {
                             game.housing_capacity += 10;
                             }*/
-                            play_sound_build();
+                            nb_play_sound_build_b7();
                             //if (current_tool == TOOL_ROAD) { ram_map[idx] = TYPE_ROAD; draw_tile(curs_x, curs_y); }
                             //else { // on définit la tuile à afficher en fonction du sub tool sélectionné ===================
                                 uint8_t base_tile = nb_get_tool_base_tile(current_tool);
@@ -761,7 +842,7 @@ call_intro_title_animation();
                                     ram_map[bidx+i+(j*64)] = (base_tile == TILE_ONETILEHOME) ? TILE_ONETILEHOME : base_tile + (i+(j*size));
                                     draw_tile(bx+i, by+j);
                                 }
-                                add_building(bidx, base_tile);
+                                nb_add_building_b7(bidx, base_tile);
                                 if (ore_count >= 4)
                                     building_registry[building_count - 1].flags |= BLDG_FLAG_HAS_ORE;
                                 //play_construction_fx(curs_x, curs_y, size);
@@ -769,7 +850,7 @@ call_intro_title_animation();
                         }
                     }
 
-                    disable_sram();
+                    nb_disable_sram_b7();
                     if (game.money != money_before) hud_money_dirty = 1;
 
                 }
@@ -781,19 +862,19 @@ call_intro_title_animation();
             if (is_menu_open) {
                 if (!is_selecting_sub) {
                     // NAVIGATION BAS (Catégories)
-                    if (joy & J_RIGHT && current_tool < 5) { current_tool++; update_sub_tool_icons(); waitpadup(); }
-                    if (joy & J_LEFT && current_tool > 0) { current_tool--; update_sub_tool_icons(); waitpadup(); }
-                    
+                    if (joy & J_RIGHT && current_tool < 5) { current_tool++; nb_update_sub_tool_icons_b7(); waitpadup(); }
+                    if (joy & J_LEFT && current_tool > 0) { current_tool--; nb_update_sub_tool_icons_b7(); waitpadup(); }
+
                     // Monter dans le sous-menu
-                    if (joy & J_A || joy & J_UP) { 
-                        is_selecting_sub = 1; 
+                    if (joy & J_A || joy & J_UP) {
+                        is_selecting_sub = 1;
                         current_sub_tool = 0;
 
-                        force_cursor_update();
+                        nb_force_cursor_update_b7();
                         waitpadup(); 
                     }
 
-                    if (joy & J_B) { current_tool = TOOL_NONE; hide_menu(); move_win(7, 144); } // passe is_menu_open à 0 ; cache le hud bas
+                    if (joy & J_B) { current_tool = TOOL_NONE; nb_hide_menu_b7(); move_win(7, 144); } // passe is_menu_open à 0 ; cache le hud bas
                 } 
                 else {
 
@@ -802,20 +883,19 @@ call_intro_title_animation();
     uint8_t max_tools;
     uint8_t current_final_tool; // inutilisé ?
                     // NAVIGATION HAUT (Sous-outils)
-                    max_tools = get_sub_tool_count(current_tool);
+                    max_tools = nb_get_sub_tool_count_b7(current_tool);
 //==================================================================================================================
 // assignation de current_sub_tool
 //==================================================================================================================
-                    if (joy & J_RIGHT && current_sub_tool < (max_tools - 1)) { current_sub_tool++; force_cursor_update(); waitpadup(); }
-                    if (joy & J_LEFT && current_sub_tool > 0) { current_sub_tool--; force_cursor_update(); waitpadup(); }
-                    
+                    if (joy & J_RIGHT && current_sub_tool < (max_tools - 1)) { current_sub_tool++; nb_force_cursor_update_b7(); waitpadup(); }
+                    if (joy & J_LEFT && current_sub_tool > 0) { current_sub_tool--; nb_force_cursor_update_b7(); waitpadup(); }
+
                     // Redescendre aux catégories
-                    if (joy & J_DOWN || joy & J_B) { 
-                        
-                        is_selecting_sub = 0; 
-                        // Cacher les sprites du haut quand on redescend ========================== ne fonctionne pas 
+                    if (joy & J_DOWN || joy & J_B) {
+                        is_selecting_sub = 0;
+                        // Cacher les sprites du haut quand on redescend ========================== ne fonctionne pas
                         for(uint8_t i=5; i<21; i++) move_sprite(i, 0, 0);
-                        force_cursor_update();
+                        nb_force_cursor_update_b7();
                         waitpadup(); 
                     }
 
@@ -823,11 +903,11 @@ call_intro_title_animation();
                     if (joy & (J_A | J_START)) {
 
                         // On récupère le bon outil final grâce au tableau et aux index actuels
-                        current_tool = building_mapping[current_tool][current_sub_tool];
+                        current_tool = nb_get_building_tool_b7(current_tool, current_sub_tool);
 
                         is_selecting_sub = 0;
                         for(uint8_t i=0; i<21; i++) move_sprite(i, 0, 0); // Cache curseur + icônes HUD
-                        hide_menu();
+                        nb_hide_menu_b7();
                         waitpadup();
 
                         // Clamp cursor to new tool's valid range
@@ -846,17 +926,17 @@ call_intro_title_animation();
                 }
             }
             
-            update_game_logic(); // tout y est dans un : day_timer++; if (day_timer >= MONTH_INTERVAL)
-            update_story_logic();
+            nb_update_game_logic_b7();
+            nb_update_story_logic_b7();
 
             //update_building_alerts(cam_x, cam_y, power_ok);
             //uint8_t power_ok = (game.electricity_prod >= game.electricity_cons);
 
             scroll_camera_step();
             if (((joy & J_B) || ((current_tool == TOOL_ROAD || current_tool == TOOL_ERASE) && (joy & J_A))) && !is_menu_open) scroll_camera_step();
-            if (!is_menu_open) cars_update(cam_x, cam_y);
-            tram_update(cam_x, cam_y);
-            boat_update(cam_x, cam_y);
+            if (!is_menu_open) nb_cars_update_b7(cam_x, cam_y);
+            nb_tram_update_b7(cam_x, cam_y);
+            nb_boat_update_b7(cam_x, cam_y);
             nb_plane_update_b3(cam_x, cam_y);
             nb_water_anim_update();
             if (hud_money_dirty) {
@@ -866,11 +946,11 @@ call_intro_title_animation();
                     hud_money_dirty = 0;
                     if (!is_menu_open) {
                         uint8_t _row = 0u;
-                        draw_hud_money_date(_row);
+                        nb_draw_hud_money_date_b7(_row);
                     }
                 }
             }
-            if (flags_step >= 0) refresh_flags_tick();
+            if (flags_step >= 0) nb_refresh_flags_tick_b7();
             call_update_economy_tick();
             wait_vbl_done();
         }
